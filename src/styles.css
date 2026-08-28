@@ -1242,3 +1242,40 @@ footer a:hover {
     background: #292722;
   }
   }
+/* SS PASSION - Colour selection */
+
+.options button {
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.options button.selected {
+  background: #111 !important;
+  color: #fff !important;
+  border-color: #111 !important;
+  transform: scale(1.04);
+}
+
+/* Colour swatch appearance */
+.options button:first-child {
+  background: #f3eee5;
+}
+
+.options button:nth-child(2) {
+  background: #111;
+  color: #fff;
+}
+
+.options button:nth-child(3) {
+  background: #777;
+  color: #fff;
+}
+
+/* Product image interaction */
+.modal-image img {
+  transition: filter 0.35s ease, transform 0.35s ease;
+}
+
+.modal-image img:hover {
+  transform: scale(1.02);
+}
