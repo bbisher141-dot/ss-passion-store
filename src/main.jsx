@@ -928,22 +928,15 @@ function App() {
                 <div className="options">
 
                   {selectedProduct.colors.map((color) => (
-
-                    <button
-                      key={color}
-                      className={
-                        selectedColor === color
-                          ? "selected"
-                          : ""
-                      }
-                      onClick={() =>
-                        setSelectedColor(color)
-                      }
-                    >
-                      {color}
-                    </button>
-
-                  ))}
+  <button
+    key={color}
+    type="button"
+    className={selectedColor === color ? "selected" : ""}
+    onClick={() => setSelectedColor(color)}
+  >
+    {color}
+  </button>
+))}
 
                 </div>
 
@@ -956,22 +949,15 @@ function App() {
                 <div className="options">
 
                   {selectedProduct.sizes.map((size) => (
-
-                    <button
-                      key={size}
-                      className={
-                        selectedSize === size
-                          ? "selected"
-                          : ""
-                      }
-                      onClick={() =>
-                        setSelectedSize(size)
-                      }
-                    >
-                      {size}
-                    </button>
-
-                  ))}
+  <button
+    key={size}
+    type="button"
+    className={selectedSize === size ? "selected" : ""}
+    onClick={() => setSelectedSize(size)}
+  >
+    {size}
+  </button>
+))}
 
                 </div>
 
