@@ -1,3 +1,7 @@
+/* =====================================================
+   SS PASSION — MAIN STYLES
+   ===================================================== */
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -28,7 +32,9 @@ a {
   text-decoration: none;
 }
 
-/* TOP BAR */
+/* =====================================================
+   TOP BAR
+   ===================================================== */
 
 .announcement {
   background: #292722;
@@ -39,7 +45,9 @@ a {
   letter-spacing: 2px;
 }
 
-/* HEADER */
+/* =====================================================
+   HEADER
+   ===================================================== */
 
 .header {
   height: 78px;
@@ -117,7 +125,9 @@ a {
   font-size: 20px;
 }
 
-/* HERO */
+/* =====================================================
+   HERO
+   ===================================================== */
 
 .hero {
   min-height: 760px;
@@ -200,11 +210,22 @@ a {
   transform: translateY(-2px);
 }
 
-/* INTRO */
+/* =====================================================
+   INTRO
+   ===================================================== */
 
 .intro {
+  position: relative;
   padding: 125px 20px 110px;
   text-align: center;
+  background:
+    linear-gradient(
+      rgba(244, 239, 231, 0.94),
+      rgba(244, 239, 231, 0.94)
+    ),
+    url("https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1800&q=85");
+  background-size: cover;
+  background-position: center;
 }
 
 .intro h2 {
@@ -225,10 +246,13 @@ a {
   line-height: 1.8;
 }
 
-/* COLLECTION */
+/* =====================================================
+   COLLECTION
+   ===================================================== */
 
 .collection-section {
-  padding: 0 5% 120px;
+  padding: 80px 5% 120px;
+  background: #f8f4ed;
 }
 
 .section-heading {
@@ -259,12 +283,24 @@ a {
   letter-spacing: 1.5px;
 }
 
-/* PRODUCTS */
+/* =====================================================
+   PRODUCTS
+   ===================================================== */
 
 .products {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
+}
+
+.product {
+  background: #eee8de;
+  padding-bottom: 18px;
+  transition: transform 0.3s ease;
+}
+
+.product:hover {
+  transform: translateY(-4px);
 }
 
 .product-image-wrap {
@@ -330,7 +366,7 @@ a {
 }
 
 .product-info {
-  padding-top: 14px;
+  padding: 16px 14px 5px;
   display: flex;
   justify-content: space-between;
   gap: 12px;
@@ -353,14 +389,18 @@ a {
   white-space: nowrap;
 }
 
-/* EDITORIAL */
+/* =====================================================
+   EDITORIAL
+   ===================================================== */
 
 .editorial {
+  position: relative;
+  overflow: hidden;
   margin: 0 5% 120px;
   min-height: 650px;
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
-  background: #e7ddcf;
+  background: #d8cbbb;
 }
 
 .editorial-image {
@@ -375,6 +415,14 @@ a {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background:
+    linear-gradient(
+      rgba(216, 203, 187, 0.91),
+      rgba(216, 203, 187, 0.91)
+    ),
+    url("https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1400&q=85");
+  background-size: cover;
+  background-position: center;
 }
 
 .editorial-content h2 {
@@ -404,15 +452,28 @@ a {
   letter-spacing: 1.7px;
 }
 
-/* STORY */
+/* =====================================================
+   STORY
+   ===================================================== */
 
 .story {
+  position: relative;
+  overflow: hidden;
   padding: 125px 8%;
-  background: #292722;
+  background:
+    linear-gradient(
+      rgba(28, 26, 23, 0.88),
+      rgba(28, 26, 23, 0.88)
+    ),
+    url("https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1800&q=85");
+  background-size: cover;
+  background-position: center;
   color: #f7f3ec;
 }
 
 .story-content {
+  position: relative;
+  z-index: 2;
   max-width: 900px;
 }
 
@@ -433,12 +494,15 @@ a {
   line-height: 1.9;
 }
 
-/* TRUST */
+/* =====================================================
+   TRUST
+   ===================================================== */
 
 .trust {
   padding: 55px 5%;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  background: #ebe3d7;
   border-bottom: 1px solid #ddd7ce;
 }
 
@@ -467,16 +531,24 @@ a {
   font-size: 11px;
 }
 
-/* JOURNAL */
+/* =====================================================
+   JOURNAL
+   ===================================================== */
 
 .journal {
   padding: 120px 5%;
+  background: #f8f4ed;
 }
 
 .journal-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
+}
+
+.journal-grid article {
+  background: #eee8de;
+  padding-bottom: 20px;
 }
 
 .journal-image {
@@ -498,7 +570,14 @@ a {
   background-image: url("https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1100&q=85");
 }
 
+.journal-grid article > p,
+.journal-grid article > h3 {
+  padding-left: 18px;
+  padding-right: 18px;
+}
+
 .journal-grid article > p {
+  padding-top: 4px;
   margin-bottom: 9px;
   color: #817a71;
   font-size: 8px;
@@ -512,12 +591,23 @@ a {
   line-height: 1.15;
 }
 
-/* NEWSLETTER */
+/* =====================================================
+   NEWSLETTER
+   ===================================================== */
 
 .newsletter {
+  position: relative;
+  overflow: hidden;
   padding: 120px 20px;
-  background: #e7ddcf;
   text-align: center;
+  background:
+    linear-gradient(
+      rgba(218, 207, 193, 0.93),
+      rgba(218, 207, 193, 0.93)
+    ),
+    url("https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=1800&q=85");
+  background-size: cover;
+  background-position: center;
 }
 
 .newsletter h2 {
@@ -552,13 +642,17 @@ a {
   letter-spacing: 1.7px;
 }
 
-/* FOOTER */
+/* =====================================================
+   FOOTER
+   ===================================================== */
 
 footer {
   padding: 75px 5%;
   display: grid;
   grid-template-columns: 2fr repeat(3, 1fr);
   gap: 50px;
+  background: #292722;
+  color: #f7f3ec;
 }
 
 .footer-logo {
@@ -573,14 +667,14 @@ footer {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #292722;
+  border: 1px solid #f7f3ec;
   font-size: 9px;
 }
 
 .footer-brand p {
   max-width: 220px;
   margin-top: 18px;
-  color: #817a71;
+  color: #bdb5aa;
   font-size: 11px;
   line-height: 1.7;
 }
@@ -595,23 +689,26 @@ footer a {
   display: block;
   width: fit-content;
   margin-bottom: 12px;
-  color: #716c64;
+  color: #bdb5aa;
   font-size: 11px;
 }
 
 footer a:hover {
-  color: #292722;
+  color: #ffffff;
 }
 
 .copyright {
   padding: 20px 5%;
-  border-top: 1px solid #ddd7ce;
-  color: #918a81;
+  background: #292722;
+  border-top: 1px solid #48443e;
+  color: #8f887f;
   font-size: 8px;
   letter-spacing: 1.5px;
 }
 
-/* PRODUCT MODAL */
+/* =====================================================
+   PRODUCT MODAL
+   ===================================================== */
 
 .modal-backdrop {
   position: fixed;
@@ -643,6 +740,11 @@ footer a:hover {
   height: 100%;
   display: block;
   object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.modal-image img:hover {
+  transform: scale(1.02);
 }
 
 .modal-info {
@@ -675,6 +777,10 @@ footer a:hover {
   font-size: 14px;
 }
 
+/* =====================================================
+   SIZE + COLOR SELECTORS
+   ===================================================== */
+
 .selector {
   margin-bottom: 25px;
 }
@@ -697,14 +803,37 @@ footer a:hover {
   padding: 11px 13px;
   border: 1px solid #cfc8bd;
   background: transparent;
+  color: #292722;
   font-size: 9px;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+/*
+  IMPORTANT:
+  No nth-child colour rules here.
+  This prevents Size and Color buttons
+  from inheriting incorrect colours.
+*/
+
+.options button:hover {
+  border-color: #292722;
 }
 
 .options button.selected {
-  border-color: #292722;
-  background: #292722;
-  color: #fff;
+  border-color: #292722 !important;
+  background: #292722 !important;
+  color: #fff !important;
+  transform: scale(1.03);
 }
+
+/* =====================================================
+   ADD TO BAG
+   ===================================================== */
 
 .add-to-bag {
   width: 100%;
@@ -715,6 +844,11 @@ footer a:hover {
   color: #fff;
   font-size: 9px;
   letter-spacing: 1.8px;
+  transition: opacity 0.2s ease;
+}
+
+.add-to-bag:hover {
+  opacity: 0.85;
 }
 
 .delivery {
@@ -724,7 +858,9 @@ footer a:hover {
   line-height: 1.7;
 }
 
-/* CART */
+/* =====================================================
+   CART
+   ===================================================== */
 
 .cart-backdrop {
   position: fixed;
@@ -865,7 +1001,9 @@ footer a:hover {
   letter-spacing: 2px;
 }
 
-/* MOBILE */
+/* =====================================================
+   TABLET
+   ===================================================== */
 
 @media (max-width: 900px) {
 
@@ -931,6 +1069,10 @@ footer a:hover {
   }
 }
 
+/* =====================================================
+   MOBILE
+   ===================================================== */
+
 @media (max-width: 600px) {
 
   .announcement {
@@ -974,14 +1116,11 @@ footer a:hover {
   }
 
   .intro {
-    padding: 80px 25px;
+    padding: 85px 25px;
   }
 
-  .collection-section,
-  .journal {
-    padding-left: 18px;
-    padding-right: 18px;
-    padding-bottom: 80px;
+  .collection-section {
+    padding: 65px 18px 80px;
   }
 
   .section-heading {
@@ -1002,6 +1141,10 @@ footer a:hover {
     gap: 12px;
   }
 
+  .product {
+    padding-bottom: 12px;
+  }
+
   .product-info {
     display: block;
   }
@@ -1012,6 +1155,7 @@ footer a:hover {
 
   .editorial {
     margin: 0 18px 80px;
+    background: #d8cbbb;
   }
 
   .editorial-image {
@@ -1023,7 +1167,10 @@ footer a:hover {
   }
 
   .story {
+    min-height: 600px;
     padding: 85px 25px;
+    display: flex;
+    align-items: center;
   }
 
   .story h2 {
@@ -1032,10 +1179,20 @@ footer a:hover {
 
   .trust {
     padding: 45px 20px;
+    background: #ebe3d7;
   }
 
   .trust div {
     padding: 0 10px;
+  }
+
+  .journal {
+    padding: 80px 18px;
+    background: #f8f4ed;
+  }
+
+  .journal-grid article {
+    background: #eee8de;
   }
 
   .newsletter {
@@ -1045,6 +1202,7 @@ footer a:hover {
   footer {
     padding: 55px 20px;
     gap: 40px 20px;
+    background: #292722;
   }
 
   .footer-brand {
@@ -1054,6 +1212,8 @@ footer a:hover {
   .copyright {
     padding: 18px 20px;
   }
+
+  /* Product modal on mobile */
 
   .product-modal {
     grid-template-columns: 1fr;
@@ -1072,210 +1232,15 @@ footer a:hover {
   .modal-info h2 {
     font-size: 32px;
   }
-  }
-/* =====================================================
-   SS PASSION — PREMIUM VISUAL UPGRADE
-   ===================================================== */
 
-/* Give the main page a richer luxury background */
-.app {
-  background: #f4efe7;
-}
+  /* Size and Color buttons */
 
-/* Better introduction section */
-.intro {
-  position: relative;
-  background:
-    linear-gradient(rgba(244, 239, 231, 0.94), rgba(244, 239, 231, 0.94)),
-    url("https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1800&q=85");
-  background-size: cover;
-  background-position: center;
-}
-
-/* Product area */
-.collection-section {
-  background: #f8f4ed;
-  padding-top: 80px;
-}
-
-/* Product cards feel more premium */
-.product {
-  background: #eee8de;
-  padding-bottom: 18px;
-  transition: transform 0.3s ease;
-}
-
-.product:hover {
-  transform: translateY(-4px);
-}
-
-.product-info {
-  padding: 16px 14px 5px;
-}
-
-/* Editorial becomes a stronger visual section */
-.editorial {
-  position: relative;
-  overflow: hidden;
-  background: #d8cbbb;
-}
-
-.editorial-content {
-  background:
-    linear-gradient(rgba(216, 203, 187, 0.91), rgba(216, 203, 187, 0.91)),
-    url("https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1400&q=85");
-  background-size: cover;
-  background-position: center;
-}
-
-/* Philosophy — luxury dark section */
-.story {
-  position: relative;
-  overflow: hidden;
-  background:
-    linear-gradient(rgba(28, 26, 23, 0.88), rgba(28, 26, 23, 0.88)),
-    url("https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1800&q=85");
-  background-size: cover;
-  background-position: center;
-}
-
-.story-content {
-  position: relative;
-  z-index: 2;
-}
-
-/* Trust section */
-.trust {
-  background: #ebe3d7;
-}
-
-/* Journal gets a clean premium backdrop */
-.journal {
-  background: #f8f4ed;
-}
-
-.journal-grid article {
-  background: #eee8de;
-  padding-bottom: 20px;
-}
-
-.journal-grid article > p,
-.journal-grid article > h3 {
-  padding-left: 18px;
-  padding-right: 18px;
-}
-
-.journal-grid article > p {
-  padding-top: 4px;
-}
-
-/* Newsletter */
-.newsletter {
-  position: relative;
-  overflow: hidden;
-  background:
-    linear-gradient(rgba(218, 207, 193, 0.93), rgba(218, 207, 193, 0.93)),
-    url("https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=1800&q=85");
-  background-size: cover;
-  background-position: center;
-}
-
-/* Footer */
-footer {
-  background: #292722;
-  color: #f7f3ec;
-}
-
-.footer-logo span {
-  border-color: #f7f3ec;
-}
-
-.footer-brand p,
-footer a {
-  color: #bdb5aa;
-}
-
-footer a:hover {
-  color: #ffffff;
-}
-
-.copyright {
-  background: #292722;
-  color: #8f887f;
-  border-top-color: #48443e;
-}
-
-/* Better mobile appearance */
-@media (max-width: 600px) {
-  .intro {
-    padding-top: 85px;
-    padding-bottom: 85px;
+  .options {
+    gap: 7px;
   }
 
-  .collection-section {
-    padding-top: 65px;
-  }
-
-  .product {
-    padding-bottom: 12px;
-  }
-
-  .editorial {
-    background: #d8cbbb;
-  }
-
-  .story {
-    min-height: 600px;
-    display: flex;
-    align-items: center;
-  }
-
-  .trust {
-    background: #ebe3d7;
-  }
-
-  .journal-grid article {
-    background: #eee8de;
-  }
-
-  footer {
-    background: #292722;
+  .options button {
+    min-width: 48px;
+    padding: 11px 13px;
   }
   }
-/* SS PASSION - Colour selection */
-
-.options button {
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-
-.options button.selected {
-  background: #111 !important;
-  color: #fff !important;
-  border-color: #111 !important;
-  transform: scale(1.04);
-}
-
-/* Colour swatch appearance */
-.options button:first-child {
-  background: #f3eee5;
-}
-
-.options button:nth-child(2) {
-  background: #111;
-  color: #fff;
-}
-
-.options button:nth-child(3) {
-  background: #777;
-  color: #fff;
-}
-
-/* Product image interaction */
-.modal-image img {
-  transition: filter 0.35s ease, transform 0.35s ease;
-}
-
-.modal-image img:hover {
-  transform: scale(1.02);
-}
