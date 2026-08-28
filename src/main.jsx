@@ -185,6 +185,10 @@ function App() {
   });
 
   const openProduct = (product) => {
+  setSelectedProduct(product);
+  setSelectedColor(product.colors[0]);
+  setSelectedSize(product.sizes[0]);
+};
     setSelectedProduct(product);
     setSelectedSize(product.sizes[1] || product.sizes[0]);
     setSelectedColor(product.colors[0]);
