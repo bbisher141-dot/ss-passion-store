@@ -1086,24 +1086,16 @@ function App() {
 
                 <div className="options">
 
-                  {selectedProduct.colors.map(
-                    (color) => (
-                      <button
-                        key={color}
-                        type="button"
-                        className={
-                          selectedColor === color
-                            ? "selected"
-                            : ""
-                        }
-                        onClick={() =>
-                          setSelectedColor(color)
-                        }
-                      >
-                        {color}
-                      </button>
-                    )
-                  )}
+                  {selectedProduct.colors.map((color) => (
+  <button
+    key={color}
+    type="button"
+    className={selectedColor === color ? "selected" : ""}
+    onClick={() => setSelectedColor(color)}
+  >
+    {color}
+  </button>
+))}
 
                 </div>
 
@@ -1117,24 +1109,16 @@ function App() {
 
                 <div className="options">
 
-                  {selectedProduct.sizes.map(
-                    (size) => (
-                      <button
-                        key={size}
-                        type="button"
-                        className={
-                          selectedSize === size
-                            ? "selected"
-                            : ""
-                        }
-                        onClick={() =>
-                          setSelectedSize(size)
-                        }
-                      >
-                        {size}
-                      </button>
-                    )
-                  )}
+                  {selectedProduct.sizes.map((size) => (
+  <button
+    key={size}
+    type="button"
+    className={selectedSize === size ? "selected" : ""}
+    onClick={() => setSelectedSize(size)}
+  >
+    {size}
+  </button>
+))}
 
                 </div>
 
@@ -1143,7 +1127,7 @@ function App() {
               <button
                 className="add-to-bag"
                 type="button"
-                onClick={addToCart}
+            onClick={addToCart}
               >
                 ADD TO BAG — $
                 {selectedProduct.price}.00
