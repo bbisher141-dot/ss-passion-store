@@ -125,47 +125,125 @@ const products = [
   },
 ];
 
+const stories = [
+  {
+    id: 1,
+    tag: "STYLE GUIDE",
+    title: "The New Definition of Everyday Style",
+    text: "Discover simple ways to build a refined wardrobe that feels modern without following every trend.",
+    image:
+      "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=90",
+  },
+  {
+    id: 2,
+    tag: "SS PASSION",
+    title: "Building a Timeless Wardrobe",
+    text: "A thoughtful wardrobe starts with versatile pieces that work together season after season.",
+    image:
+      "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1200&q=90",
+  },
+  {
+    id: 3,
+    tag: "THE EDIT",
+    title: "Modern Fashion Without Limits",
+    text: "Explore the SS PASSION approach to effortless silhouettes, confident details and personal style.",
+    image:
+      "https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=1200&q=90",
+  },
+];
+
 function App() {
   const [category, setCategory] = useState("All");
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [search, setSearch] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedStory, setSelectedStory] = useState(null);
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [cart, setCart] = useState([]);
   const [wishlist, setWishlist] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
+  const [wishlistOpen, setWishlistOpen] = useState(false);
 
-  const filteredProducts =
-    category === "All"
-      ? products
-      : products.filter(
-          (product) =>
-            product.category === category || product.category === "Unisex"
-        );
+  const scrollTo = (id) => {
+    document.getElementById(id)?.scrollIntoView({
+      behavior: "smooth",
+    });
+  };
+
+  const filteredProducts = products.filter((product) => {
+    const categoryMatch =
+      category === "All" ||
+      product.category === category ||
+      product.category === "Unisex";
+
+    const searchMatch = product.name
+      .toLowerCase()
+      .includes(search.toLowerCase());
+
+    return categoryMatch && searchMatch;
+  });
 
   const openProduct = (product) => {
     setSelectedProduct(product);
     setSelectedSize(product.sizes[1] || product.sizes[0]);
     setSelectedColor(product.colors[0]);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const addToCart = () => {
     if (!selectedProduct) return;
 
-    const item = {
-      ...selectedProduct,
-      size: selectedSize,
-      color: selectedColor,
-      cartId: `${selectedProduct.id}-${selectedSize}-${selectedColor}`,
-    };
+    const cartId =
+      `${selectedProduct.id}-${selectedSize}-${selectedColor}`;
 
-    setCart((current) => [...current, item]);
-    setCartOpen(true);
+    setCart((current) => {
+      const existing = current.find(
+        (item) => item.cartId === cartId
+      );
+
+      if (existing) {
+        return current.map((item) =>
+          item.cartId === cartId
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
+
+      return [
+        ...current,
+        {
+          ...selectedProduct,
+          size: selectedSize,
+          color: selectedColor,
+          cartId,
+          quantity: 1,
+        },
+      ];
+    });
+
     setSelectedProduct(null);
+    setCartOpen(true);
+  };
+
+  const updateQuantity = (cartId, change) => {
+    setCart((current) =>
+      current
+        .map((item) =>
+          item.cartId === cartId
+            ? {
+                ...item,
+                quantity: item.quantity + change,
+              }
+            : item
+        )
+        .filter((item) => item.quantity > 0)
+    );
   };
 
   const removeFromCart = (cartId) => {
-    setCart((current) => current.filter((item) => item.cartId !== cartId));
+    setCart((current) =>
+      current.filter((item) => item.cartId !== cartId)
+    );
   };
 
   const toggleWishlist = (id) => {
@@ -176,53 +254,135 @@ function App() {
     );
   };
 
-  const total = cart.reduce((sum, item) => sum + item.price, 0);
+  const totalItems = cart.reduce(
+    (sum, item) => sum + item.quantity,
+    0
+  );
+
+  const total = cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+
+  const wishlistProducts = products.filter((product) =>
+    wishlist.includes(product.id)
+  );
 
   return (
     <div className="app">
 
-      {/* TOP BAR */}
       <div className="announcement">
         FREE INTERNATIONAL SHIPPING ON ORDERS OVER $150
       </div>
 
-      {/* HEADER */}
       <header className="header">
 
         <button
           className="mobile-menu"
-          onClick={() => document.body.classList.toggle("menu-open")}
+          onClick={() => scrollTo("collections")}
         >
           ☰
         </button>
 
-        <a className="logo" href="#">
+        <button
+          className="logo"
+          onClick={() => {
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            });
+          }}
+        >
           <span className="logo-mark">SS</span>
           <span>PASSION</span>
-        </a>
+        </button>
 
         <nav className="nav">
-          <button onClick={() => setCategory("Men")}>MEN</button>
-          <button onClick={() => setCategory("Women")}>WOMEN</button>
-          <button onClick={() => setCategory("All")}>NEW ARRIVALS</button>
-          <a href="#collections">COLLECTIONS</a>
-          <a href="#journal">JOURNAL</a>
+
+          <button
+            onClick={() => {
+              setCategory("Men");
+              scrollTo("collections");
+            }}
+          >
+            MEN
+          </button>
+
+          <button
+            onClick={() => {
+              setCategory("Women");
+              scrollTo("collections");
+            }}
+          >
+            WOMEN
+          </button>
+
+          <button
+            onClick={() => {
+              setCategory("All");
+              scrollTo("collections");
+            }}
+          >
+            NEW ARRIVALS
+          </button>
+
+          <button onClick={() => scrollTo("collections")}>
+            COLLECTIONS
+          </button>
+
+          <button onClick={() => scrollTo("journal")}>
+            JOURNAL
+          </button>
+
         </nav>
 
         <div className="header-actions">
-          <button>⌕</button>
 
-          <button onClick={() => alert(`${wishlist.length} saved item(s)`)}>
-            ♡
+          <button
+            onClick={() => setSearchOpen(!searchOpen)}
+            aria-label="Search"
+          >
+            ⌕
+          </button>
+
+          <button
+            onClick={() => setWishlistOpen(true)}
+            aria-label="Wishlist"
+          >
+            {wishlist.length > 0 ? "♥" : "♡"}
           </button>
 
           <button onClick={() => setCartOpen(true)}>
-            BAG ({cart.length})
+            BAG ({totalItems})
           </button>
+
         </div>
       </header>
 
-      {/* HERO */}
+      {searchOpen && (
+        <div className="search-panel">
+
+          <input
+            autoFocus
+            value={search}
+            onChange={(event) =>
+              setSearch(event.target.value)
+            }
+            placeholder="Search products..."
+          />
+
+          <button
+            onClick={() => {
+              setSearch("");
+              setSearchOpen(false);
+            }}
+          >
+            ×
+          </button>
+
+        </div>
+      )}
+
       <section className="hero">
 
         <div className="hero-overlay"></div>
@@ -244,25 +404,31 @@ function App() {
           </p>
 
           <div className="hero-buttons">
+
             <button
               className="primary-button"
-              onClick={() => setCategory("Men")}
+              onClick={() => {
+                setCategory("Men");
+                scrollTo("collections");
+              }}
             >
               SHOP MEN
             </button>
 
             <button
               className="secondary-button"
-              onClick={() => setCategory("Women")}
+              onClick={() => {
+                setCategory("Women");
+                scrollTo("collections");
+              }}
             >
               SHOP WOMEN
             </button>
-          </div>
 
+          </div>
         </div>
       </section>
 
-      {/* INTRO */}
       <section className="intro">
 
         <p className="eyebrow">
@@ -282,8 +448,10 @@ function App() {
 
       </section>
 
-      {/* PRODUCTS */}
-      <section className="collection-section" id="collections">
+      <section
+        className="collection-section"
+        id="collections"
+      >
 
         <div className="section-heading">
 
@@ -293,13 +461,16 @@ function App() {
             </p>
 
             <h2>
-              {category === "All"
+              {search
+                ? `Search: ${search}`
+                : category === "All"
                 ? "New Arrivals"
                 : category}
             </h2>
           </div>
 
           <div className="category-buttons">
+
             <button onClick={() => setCategory("All")}>
               ALL
             </button>
@@ -311,85 +482,100 @@ function App() {
             <button onClick={() => setCategory("Women")}>
               WOMEN
             </button>
-          </div>
 
+          </div>
         </div>
 
         <div className="products">
 
-          {filteredProducts.map((product) => (
+          {filteredProducts.length === 0 ? (
+            <div className="empty-search">
+              <h3>No products found.</h3>
+              <button
+                onClick={() => {
+                  setSearch("");
+                  setCategory("All");
+                }}
+              >
+                VIEW ALL PRODUCTS
+              </button>
+            </div>
+          ) : (
+            filteredProducts.map((product) => (
 
-            <article
-              className="product"
-              key={product.id}
-            >
-
-              <div
-                className="product-image-wrap"
-                onClick={() => openProduct(product)}
+              <article
+                className="product"
+                key={product.id}
               >
 
-                <img
-                  className="product-image"
-                  src={product.image}
-                  alt={product.name}
-                />
-
-                <span className="new-badge">
-                  NEW
-                </span>
-
-                <button
-                  className="wishlist"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    toggleWishlist(product.id);
-                  }}
+                <div
+                  className="product-image-wrap"
+                  onClick={() => openProduct(product)}
                 >
-                  {wishlist.includes(product.id)
-                    ? "♥"
-                    : "♡"}
-                </button>
 
-                <button
-                  className="quick-add"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    openProduct(product);
-                  }}
-                >
-                  QUICK VIEW
-                </button>
+                  <img
+                    className="product-image"
+                    src={product.image}
+                    alt={product.name}
+                  />
 
-              </div>
+                  <span className="new-badge">
+                    NEW
+                  </span>
 
-              <div className="product-info">
+                  <button
+                    className="wishlist"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      toggleWishlist(product.id);
+                    }}
+                  >
+                    {wishlist.includes(product.id)
+                      ? "♥"
+                      : "♡"}
+                  </button>
 
-                <div>
-                  <p className="product-category">
-                    {product.category}
-                  </p>
+                  <button
+                    className="quick-add"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      openProduct(product);
+                    }}
+                  >
+                    QUICK VIEW
+                  </button>
 
-                  <h3>
-                    {product.name}
-                  </h3>
                 </div>
 
-                <p className="product-price">
-                  ${product.price}.00
-                </p>
+                <div className="product-info">
 
-              </div>
+                  <div>
 
-            </article>
+                    <p className="product-category">
+                      {product.category}
+                    </p>
 
-          ))}
+                    <h3>
+                      {product.name}
+                    </h3>
+
+                  </div>
+
+                  <p className="product-price">
+                    ${product.price}.00
+                  </p>
+
+                </div>
+
+              </article>
+
+            ))
+          )}
 
         </div>
       </section>
 
-      {/* EDITORIAL */}
-      <section className="editorial" id="women">
+      <section className="editorial">
 
         <div className="editorial-image"></div>
 
@@ -413,7 +599,10 @@ function App() {
 
           <button
             className="text-link"
-            onClick={() => setCategory("All")}
+            onClick={() => {
+              setCategory("All");
+              scrollTo("collections");
+            }}
           >
             EXPLORE COLLECTIONS →
           </button>
@@ -422,8 +611,7 @@ function App() {
 
       </section>
 
-      {/* PHILOSOPHY */}
-      <section className="story" id="men">
+      <section className="story" id="story">
 
         <div className="story-content">
 
@@ -453,57 +641,36 @@ function App() {
 
       </section>
 
-      {/* TRUST */}
       <section className="trust">
 
         <div>
-          <strong>
-            WORLDWIDE SHIPPING
-          </strong>
-
-          <span>
-            Delivered internationally
-          </span>
+          <strong>WORLDWIDE SHIPPING</strong>
+          <span>Delivered internationally</span>
         </div>
 
         <div>
-          <strong>
-            SECURE PAYMENTS
-          </strong>
-
-          <span>
-            Safe & protected checkout
-          </span>
+          <strong>SECURE PAYMENTS</strong>
+          <span>Safe & protected checkout</span>
         </div>
 
         <div>
-          <strong>
-            EASY RETURNS
-          </strong>
-
-          <span>
-            Simple return experience
-          </span>
+          <strong>EASY RETURNS</strong>
+          <span>Simple return experience</span>
         </div>
 
         <div>
-          <strong>
-            CUSTOMER SUPPORT
-          </strong>
-
-          <span>
-            We're here to help
-          </span>
+          <strong>CUSTOMER SUPPORT</strong>
+          <span>We're here to help</span>
         </div>
 
       </section>
 
-      {/* JOURNAL */}
       <section className="journal" id="journal">
 
         <div className="section-heading">
 
           <div>
+
             <p className="eyebrow">
               FROM THE JOURNAL
             </p>
@@ -511,45 +678,59 @@ function App() {
             <h2>
               Stories & Style
             </h2>
+
           </div>
 
-          <span className="journal-link">
+          <button
+            className="journal-link"
+            onClick={() => scrollTo("journal")}
+          >
             EXPLORE →
-          </span>
+          </button>
 
         </div>
 
         <div className="journal-grid">
 
-          <article>
-            <div className="journal-image journal-one"></div>
-            <p>STYLE GUIDE</p>
-            <h3>
-              The New Definition of Everyday Style
-            </h3>
-          </article>
+          {stories.map((story) => (
 
-          <article>
-            <div className="journal-image journal-two"></div>
-            <p>SS PASSION</p>
-            <h3>
-              Building a Timeless Wardrobe
-            </h3>
-          </article>
+            <article
+              key={story.id}
+              onClick={() => setSelectedStory(story)}
+              role="button"
+              tabIndex="0"
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  setSelectedStory(story);
+                }
+              }}
+            >
 
-          <article>
-            <div className="journal-image journal-three"></div>
-            <p>THE EDIT</p>
-            <h3>
-              Modern Fashion Without Limits
-            </h3>
-          </article>
+              <div
+                className="journal-image"
+                style={{
+                  backgroundImage: `url("${story.image}")`,
+                }}
+              ></div>
+
+              <p>{story.tag}</p>
+
+              <h3>
+                {story.title}
+              </h3>
+
+              <span className="read-story">
+                READ STORY →
+              </span>
+
+            </article>
+
+          ))}
 
         </div>
 
       </section>
 
-      {/* NEWSLETTER */}
       <section className="newsletter">
 
         <p className="eyebrow">
@@ -562,22 +743,28 @@ function App() {
           new drops & stories.
         </h2>
 
-        <div className="newsletter-form">
+        <form
+          className="newsletter-form"
+          onSubmit={(event) => {
+            event.preventDefault();
+            alert("Welcome to SS PASSION.");
+          }}
+        >
 
           <input
             type="email"
+            required
             placeholder="Your email address"
           />
 
-          <button>
+          <button type="submit">
             JOIN
           </button>
 
-        </div>
+        </form>
 
       </section>
 
-      {/* FOOTER */}
       <footer>
 
         <div className="footer-brand">
@@ -594,29 +781,90 @@ function App() {
         </div>
 
         <div>
+
           <h4>SHOP</h4>
-          <a href="#collections">Men</a>
-          <a href="#collections">Women</a>
-          <a href="#collections">New Arrivals</a>
-          <a href="#collections">Collections</a>
-          <a href="#collections">Sale</a>
+
+          <button onClick={() => {
+            setCategory("Men");
+            scrollTo("collections");
+          }}>
+            Men
+          </button>
+
+          <button onClick={() => {
+            setCategory("Women");
+            scrollTo("collections");
+          }}>
+            Women
+          </button>
+
+          <button onClick={() => {
+            setCategory("All");
+            scrollTo("collections");
+          }}>
+            New Arrivals
+          </button>
+
+          <button onClick={() => scrollTo("collections")}>
+            Collections
+          </button>
+
         </div>
 
         <div>
+
           <h4>HELP</h4>
-          <a href="#contact">Contact</a>
-          <a href="#shipping">Shipping</a>
-          <a href="#returns">Returns</a>
-          <a href="#size">Size Guide</a>
-          <a href="#faq">FAQ</a>
+
+          <button onClick={() =>
+            alert("Shipping information will be available at checkout.")
+          }>
+            Shipping
+          </button>
+
+          <button onClick={() =>
+            alert("Our return policy will be available soon.")
+          }>
+            Returns
+          </button>
+
+          <button onClick={() =>
+            alert("Size guide coming soon.")
+          }>
+            Size Guide
+          </button>
+
+          <button onClick={() =>
+            alert("FAQ coming soon.")
+          }>
+            FAQ
+          </button>
+
         </div>
 
         <div>
+
           <h4>ABOUT</h4>
-          <a href="#story">Our Story</a>
-          <a href="#journal">Journal</a>
-          <a href="#privacy">Privacy</a>
-          <a href="#terms">Terms</a>
+
+          <button onClick={() => scrollTo("story")}>
+            Our Story
+          </button>
+
+          <button onClick={() => scrollTo("journal")}>
+            Journal
+          </button>
+
+          <button onClick={() =>
+            alert("Privacy policy will be published before launch.")
+          }>
+            Privacy
+          </button>
+
+          <button onClick={() =>
+            alert("Terms & conditions will be published before launch.")
+          }>
+            Terms
+          </button>
+
         </div>
 
       </footer>
@@ -625,12 +873,19 @@ function App() {
         © 2026 SS PASSION. ALL RIGHTS RESERVED.
       </div>
 
-      {/* PRODUCT DETAIL */}
+      {/* PRODUCT MODAL */}
+
       {selectedProduct && (
 
-        <div className="modal-backdrop">
+        <div
+          className="modal-backdrop"
+          onClick={() => setSelectedProduct(null)}
+        >
 
-          <div className="product-modal">
+          <div
+            className="product-modal"
+            onClick={(event) => event.stopPropagation()}
+          >
 
             <button
               className="close-modal"
@@ -640,10 +895,12 @@ function App() {
             </button>
 
             <div className="modal-image">
+
               <img
                 src={selectedProduct.image}
                 alt={selectedProduct.name}
               />
+
             </div>
 
             <div className="modal-info">
@@ -662,9 +919,7 @@ function App() {
 
               <div className="selector">
 
-                <strong>
-                  COLOUR
-                </strong>
+                <strong>COLOUR</strong>
 
                 <div className="options">
 
@@ -692,9 +947,7 @@ function App() {
 
               <div className="selector">
 
-                <strong>
-                  SIZE
-                </strong>
+                <strong>SIZE</strong>
 
                 <div className="options">
 
@@ -741,12 +994,181 @@ function App() {
 
       )}
 
+      {/* STORY MODAL */}
+
+      {selectedStory && (
+
+        <div
+          className="modal-backdrop"
+          onClick={() => setSelectedStory(null)}
+        >
+
+          <div
+            className="story-modal"
+            onClick={(event) => event.stopPropagation()}
+          >
+
+            <button
+              className="close-modal"
+              onClick={() => setSelectedStory(null)}
+            >
+              ×
+            </button>
+
+            <img
+              src={selectedStory.image}
+              alt={selectedStory.title}
+            />
+
+            <div className="story-modal-content">
+
+              <p className="eyebrow">
+                {selectedStory.tag}
+              </p>
+
+              <h2>
+                {selectedStory.title}
+              </h2>
+
+              <p>
+                {selectedStory.text}
+              </p>
+
+              <button
+                className="primary-button"
+                onClick={() => {
+                  setSelectedStory(null);
+                  setCategory("All");
+                  scrollTo("collections");
+                }}
+              >
+                SHOP THE EDIT
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      )}
+
+      {/* WISHLIST */}
+
+      {wishlistOpen && (
+
+        <div
+          className="cart-backdrop"
+          onClick={() => setWishlistOpen(false)}
+        >
+
+          <aside
+            className="cart"
+            onClick={(event) => event.stopPropagation()}
+          >
+
+            <div className="cart-header">
+
+              <h2>
+                SAVED ITEMS
+              </h2>
+
+              <button
+                onClick={() => setWishlistOpen(false)}
+              >
+                ×
+              </button>
+
+            </div>
+
+            {wishlistProducts.length === 0 ? (
+
+              <div className="empty-cart">
+
+                <p>
+                  No saved items yet.
+                </p>
+
+                <button
+                  onClick={() => setWishlistOpen(false)}
+                >
+                  CONTINUE SHOPPING
+                </button>
+
+              </div>
+
+            ) : (
+
+              <div className="cart-items">
+
+                {wishlistProducts.map((product) => (
+
+                  <div
+                    className="cart-item"
+                    key={product.id}
+                  >
+
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                    />
+
+                    <div>
+
+                      <h3>
+                        {product.name}
+                      </h3>
+
+                      <strong>
+                        ${product.price}.00
+                      </strong>
+
+                      <button
+                        onClick={() => {
+                          setWishlistOpen(false);
+                          openProduct(product);
+                        }}
+                      >
+                        VIEW PRODUCT
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          toggleWishlist(product.id)
+                        }
+                      >
+                        REMOVE
+                      </button>
+
+                    </div>
+
+                  </div>
+
+                ))}
+
+              </div>
+
+            )}
+
+          </aside>
+
+        </div>
+
+      )}
+
       {/* CART */}
+
       {cartOpen && (
 
-        <div className="cart-backdrop">
+        <div
+          className="cart-backdrop"
+          onClick={() => setCartOpen(false)}
+        >
 
-          <aside className="cart">
+          <aside
+            className="cart"
+            onClick={(event) => event.stopPropagation()}
+          >
 
             <div className="cart-header">
 
@@ -765,6 +1187,7 @@ function App() {
             {cart.length === 0 ? (
 
               <div className="empty-cart">
+
                 <p>
                   Your bag is currently empty.
                 </p>
@@ -774,6 +1197,7 @@ function App() {
                 >
                   CONTINUE SHOPPING
                 </button>
+
               </div>
 
             ) : (
@@ -805,8 +1229,38 @@ function App() {
                         </p>
 
                         <strong>
-                          ${item.price}.00
+                          ${(item.price * item.quantity).toFixed(2)}
                         </strong>
+
+                        <div className="quantity-control">
+
+                          <button
+                            onClick={() =>
+                              updateQuantity(
+                                item.cartId,
+                                -1
+                              )
+                            }
+                          >
+                            −
+                          </button>
+
+                          <span>
+                            {item.quantity}
+                          </span>
+
+                          <button
+                            onClick={() =>
+                              updateQuantity(
+                                item.cartId,
+                                1
+                              )
+                            }
+                          >
+                            +
+                          </button>
+
+                        </div>
 
                         <button
                           onClick={() =>
@@ -827,18 +1281,21 @@ function App() {
                 <div className="cart-footer">
 
                   <div className="cart-total">
-                    <span>SUBTOTAL</span>
+
+                    <span>
+                      SUBTOTAL
+                    </span>
+
                     <strong>
                       ${total.toFixed(2)}
                     </strong>
+
                   </div>
 
                   {total < 150 && (
                     <p className="shipping-progress">
-                      You're $
-                      {(150 - total).toFixed(2)}
-                      {" "}away from FREE international
-                      shipping.
+                      ${(150 - total).toFixed(2)} away from
+                      FREE international shipping.
                     </p>
                   )}
 
@@ -846,7 +1303,7 @@ function App() {
                     className="checkout-button"
                     onClick={() =>
                       alert(
-                        "Checkout will be connected to PayPal in the next step."
+                        "Secure checkout will be connected in the next step."
                       )
                     }
                   >
@@ -872,4 +1329,3 @@ function App() {
 createRoot(document.getElementById("root")).render(
   <App />
 );
-     
