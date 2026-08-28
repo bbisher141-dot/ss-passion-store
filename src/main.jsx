@@ -130,7 +130,8 @@ const stories = [
     id: 1,
     tag: "STYLE GUIDE",
     title: "The New Definition of Everyday Style",
-    text: "Discover simple ways to build a refined wardrobe that feels modern without following every trend.",
+    text:
+      "Discover simple ways to build a refined wardrobe that feels modern without following every trend.",
     image:
       "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=90",
   },
@@ -138,7 +139,8 @@ const stories = [
     id: 2,
     tag: "SS PASSION",
     title: "Building a Timeless Wardrobe",
-    text: "A thoughtful wardrobe starts with versatile pieces that work together season after season.",
+    text:
+      "A thoughtful wardrobe starts with versatile pieces that work together season after season.",
     image:
       "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1200&q=90",
   },
@@ -146,7 +148,8 @@ const stories = [
     id: 3,
     tag: "THE EDIT",
     title: "Modern Fashion Without Limits",
-    text: "Explore the SS PASSION approach to effortless silhouettes, confident details and personal style.",
+    text:
+      "Explore the SS PASSION approach to effortless silhouettes, confident details and personal style.",
     image:
       "https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=1200&q=90",
   },
@@ -166,9 +169,14 @@ function App() {
   const [wishlistOpen, setWishlistOpen] = useState(false);
 
   const scrollTo = (id) => {
-    document.getElementById(id)?.scrollIntoView({
-      behavior: "smooth",
-    });
+    const element = document.getElementById(id);
+
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
   };
 
   const filteredProducts = products.filter((product) => {
@@ -185,20 +193,26 @@ function App() {
   });
 
   const openProduct = (product) => {
-  setSelectedProduct(product);
-  setSelectedColor(product.colors[0]);
-  setSelectedSize(product.sizes[0]);
-};
     setSelectedProduct(product);
-    setSelectedSize(product.sizes[1] || product.sizes[0]);
     setSelectedColor(product.colors[0]);
+    setSelectedSize(product.sizes[0]);
+  };
+
+  const closeProduct = () => {
+    setSelectedProduct(null);
+    setSelectedColor("");
+    setSelectedSize("");
   };
 
   const addToCart = () => {
     if (!selectedProduct) return;
 
     const cartId =
-      `${selectedProduct.id}-${selectedSize}-${selectedColor}`;
+      selectedProduct.id +
+      "-" +
+      selectedSize +
+      "-" +
+      selectedColor;
 
     setCart((current) => {
       const existing = current.find(
@@ -208,7 +222,10 @@ function App() {
       if (existing) {
         return current.map((item) =>
           item.cartId === cartId
-            ? { ...item, quantity: item.quantity + 1 }
+            ? {
+                ...item,
+                quantity: item.quantity + 1,
+              }
             : item
         );
       }
@@ -225,7 +242,7 @@ function App() {
       ];
     });
 
-    setSelectedProduct(null);
+    closeProduct();
     setCartOpen(true);
   };
 
@@ -283,6 +300,7 @@ function App() {
 
         <button
           className="mobile-menu"
+          type="button"
           onClick={() => scrollTo("collections")}
         >
           ☰
@@ -290,12 +308,13 @@ function App() {
 
         <button
           className="logo"
-          onClick={() => {
+          type="button"
+          onClick={() =>
             window.scrollTo({
               top: 0,
               behavior: "smooth",
-            });
-          }}
+            })
+          }
         >
           <span className="logo-mark">SS</span>
           <span>PASSION</span>
@@ -304,6 +323,7 @@ function App() {
         <nav className="nav">
 
           <button
+            type="button"
             onClick={() => {
               setCategory("Men");
               scrollTo("collections");
@@ -313,6 +333,7 @@ function App() {
           </button>
 
           <button
+            type="button"
             onClick={() => {
               setCategory("Women");
               scrollTo("collections");
@@ -322,6 +343,7 @@ function App() {
           </button>
 
           <button
+            type="button"
             onClick={() => {
               setCategory("All");
               scrollTo("collections");
@@ -330,11 +352,17 @@ function App() {
             NEW ARRIVALS
           </button>
 
-          <button onClick={() => scrollTo("collections")}>
+          <button
+            type="button"
+            onClick={() => scrollTo("collections")}
+          >
             COLLECTIONS
           </button>
 
-          <button onClick={() => scrollTo("journal")}>
+          <button
+            type="button"
+            onClick={() => scrollTo("journal")}
+          >
             JOURNAL
           </button>
 
@@ -343,6 +371,7 @@ function App() {
         <div className="header-actions">
 
           <button
+            type="button"
             onClick={() => setSearchOpen(!searchOpen)}
             aria-label="Search"
           >
@@ -350,17 +379,22 @@ function App() {
           </button>
 
           <button
+            type="button"
             onClick={() => setWishlistOpen(true)}
             aria-label="Wishlist"
           >
             {wishlist.length > 0 ? "♥" : "♡"}
           </button>
 
-          <button onClick={() => setCartOpen(true)}>
+          <button
+            type="button"
+            onClick={() => setCartOpen(true)}
+          >
             BAG ({totalItems})
           </button>
 
         </div>
+
       </header>
 
       {searchOpen && (
@@ -368,14 +402,22 @@ function App() {
 
           <input
             autoFocus
+            type="search"
             value={search}
             onChange={(event) =>
               setSearch(event.target.value)
             }
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                setSearchOpen(false);
+                scrollTo("collections");
+              }
+            }}
             placeholder="Search products..."
           />
 
           <button
+            type="button"
             onClick={() => {
               setSearch("");
               setSearchOpen(false);
@@ -411,6 +453,7 @@ function App() {
 
             <button
               className="primary-button"
+              type="button"
               onClick={() => {
                 setCategory("Men");
                 scrollTo("collections");
@@ -421,6 +464,7 @@ function App() {
 
             <button
               className="secondary-button"
+              type="button"
               onClick={() => {
                 setCategory("Women");
                 scrollTo("collections");
@@ -430,7 +474,9 @@ function App() {
             </button>
 
           </div>
+
         </div>
+
       </section>
 
       <section className="intro">
@@ -460,6 +506,7 @@ function App() {
         <div className="section-heading">
 
           <div>
+
             <p className="eyebrow">
               DISCOVER
             </p>
@@ -471,31 +518,52 @@ function App() {
                 ? "New Arrivals"
                 : category}
             </h2>
+
           </div>
 
           <div className="category-buttons">
 
-            <button onClick={() => setCategory("All")}>
+            <button
+              type="button"
+              className={category === "All" ? "active" : ""}
+              onClick={() => setCategory("All")}
+            >
               ALL
             </button>
 
-            <button onClick={() => setCategory("Men")}>
+            <button
+              type="button"
+              className={category === "Men" ? "active" : ""}
+              onClick={() => setCategory("Men")}
+            >
               MEN
             </button>
 
-            <button onClick={() => setCategory("Women")}>
+            <button
+              type="button"
+              className={
+                category === "Women" ? "active" : ""
+              }
+              onClick={() => setCategory("Women")}
+            >
               WOMEN
             </button>
 
           </div>
+
         </div>
 
         <div className="products">
 
           {filteredProducts.length === 0 ? (
             <div className="empty-search">
-              <h3>No products found.</h3>
+
+              <h3>
+                No products found.
+              </h3>
+
               <button
+                type="button"
                 onClick={() => {
                   setSearch("");
                   setCategory("All");
@@ -503,6 +571,7 @@ function App() {
               >
                 VIEW ALL PRODUCTS
               </button>
+
             </div>
           ) : (
             filteredProducts.map((product) => (
@@ -529,6 +598,8 @@ function App() {
 
                   <button
                     className="wishlist"
+                    type="button"
+                    aria-label="Add to wishlist"
                     onClick={(event) => {
                       event.stopPropagation();
                       toggleWishlist(product.id);
@@ -541,6 +612,7 @@ function App() {
 
                   <button
                     className="quick-add"
+                    type="button"
                     onClick={(event) => {
                       event.stopPropagation();
                       openProduct(product);
@@ -577,6 +649,7 @@ function App() {
           )}
 
         </div>
+
       </section>
 
       <section className="editorial">
@@ -603,6 +676,7 @@ function App() {
 
           <button
             className="text-link"
+            type="button"
             onClick={() => {
               setCategory("All");
               scrollTo("collections");
@@ -615,7 +689,10 @@ function App() {
 
       </section>
 
-      <section className="story" id="story">
+      <section
+        className="story"
+        id="story"
+      >
 
         <div className="story-content">
 
@@ -648,28 +725,47 @@ function App() {
       <section className="trust">
 
         <div>
-          <strong>WORLDWIDE SHIPPING</strong>
-          <span>Delivered internationally</span>
+          <strong>
+            WORLDWIDE SHIPPING
+          </strong>
+          <span>
+            Delivered internationally
+          </span>
         </div>
 
         <div>
-          <strong>SECURE PAYMENTS</strong>
-          <span>Safe & protected checkout</span>
+          <strong>
+            SECURE PAYMENTS
+          </strong>
+          <span>
+            Safe & protected checkout
+          </span>
         </div>
 
         <div>
-          <strong>EASY RETURNS</strong>
-          <span>Simple return experience</span>
+          <strong>
+            EASY RETURNS
+          </strong>
+          <span>
+            Simple return experience
+          </span>
         </div>
 
         <div>
-          <strong>CUSTOMER SUPPORT</strong>
-          <span>We're here to help</span>
+          <strong>
+            CUSTOMER SUPPORT
+          </strong>
+          <span>
+            We're here to help
+          </span>
         </div>
 
       </section>
 
-      <section className="journal" id="journal">
+      <section
+        className="journal"
+        id="journal"
+      >
 
         <div className="section-heading">
 
@@ -687,6 +783,7 @@ function App() {
 
           <button
             className="journal-link"
+            type="button"
             onClick={() => scrollTo("journal")}
           >
             EXPLORE →
@@ -702,7 +799,7 @@ function App() {
               key={story.id}
               onClick={() => setSelectedStory(story)}
               role="button"
-              tabIndex="0"
+              tabIndex={0}
               onKeyDown={(event) => {
                 if (event.key === "Enter") {
                   setSelectedStory(story);
@@ -713,11 +810,14 @@ function App() {
               <div
                 className="journal-image"
                 style={{
-                  backgroundImage: `url("${story.image}")`,
+                  backgroundImage:
+                    `url("${story.image}")`,
                 }}
               ></div>
 
-              <p>{story.tag}</p>
+              <p>
+                {story.tag}
+              </p>
 
               <h3>
                 {story.title}
@@ -751,7 +851,9 @@ function App() {
           className="newsletter-form"
           onSubmit={(event) => {
             event.preventDefault();
-            alert("Welcome to SS PASSION.");
+            alert(
+              "Welcome to SS PASSION."
+            );
           }}
         >
 
@@ -786,30 +888,44 @@ function App() {
 
         <div>
 
-          <h4>SHOP</h4>
+          <h4>
+            SHOP
+          </h4>
 
-          <button onClick={() => {
-            setCategory("Men");
-            scrollTo("collections");
-          }}>
+          <button
+            type="button"
+            onClick={() => {
+              setCategory("Men");
+              scrollTo("collections");
+            }}
+          >
             Men
           </button>
 
-          <button onClick={() => {
-            setCategory("Women");
-            scrollTo("collections");
-          }}>
+          <button
+            type="button"
+            onClick={() => {
+              setCategory("Women");
+              scrollTo("collections");
+            }}
+          >
             Women
           </button>
 
-          <button onClick={() => {
-            setCategory("All");
-            scrollTo("collections");
-          }}>
+          <button
+            type="button"
+            onClick={() => {
+              setCategory("All");
+              scrollTo("collections");
+            }}
+          >
             New Arrivals
           </button>
 
-          <button onClick={() => scrollTo("collections")}>
+          <button
+            type="button"
+            onClick={() => scrollTo("collections")}
+          >
             Collections
           </button>
 
@@ -817,29 +933,51 @@ function App() {
 
         <div>
 
-          <h4>HELP</h4>
+          <h4>
+            HELP
+          </h4>
 
-          <button onClick={() =>
-            alert("Shipping information will be available at checkout.")
-          }>
+          <button
+            type="button"
+            onClick={() =>
+              alert(
+                "Shipping information will be available at checkout."
+              )
+            }
+          >
             Shipping
           </button>
 
-          <button onClick={() =>
-            alert("Our return policy will be available soon.")
-          }>
+          <button
+            type="button"
+            onClick={() =>
+              alert(
+                "Our return policy will be available soon."
+              )
+            }
+          >
             Returns
           </button>
 
-          <button onClick={() =>
-            alert("Size guide coming soon.")
-          }>
+          <button
+            type="button"
+            onClick={() =>
+              alert(
+                "Size guide coming soon."
+              )
+            }
+          >
             Size Guide
           </button>
 
-          <button onClick={() =>
-            alert("FAQ coming soon.")
-          }>
+          <button
+            type="button"
+            onClick={() =>
+              alert(
+                "FAQ coming soon."
+              )
+            }
+          >
             FAQ
           </button>
 
@@ -847,25 +985,43 @@ function App() {
 
         <div>
 
-          <h4>ABOUT</h4>
+          <h4>
+            ABOUT
+          </h4>
 
-          <button onClick={() => scrollTo("story")}>
+          <button
+            type="button"
+            onClick={() => scrollTo("story")}
+          >
             Our Story
           </button>
 
-          <button onClick={() => scrollTo("journal")}>
+          <button
+            type="button"
+            onClick={() => scrollTo("journal")}
+          >
             Journal
           </button>
 
-          <button onClick={() =>
-            alert("Privacy policy will be published before launch.")
-          }>
+          <button
+            type="button"
+            onClick={() =>
+              alert(
+                "Privacy policy will be published before launch."
+              )
+            }
+          >
             Privacy
           </button>
 
-          <button onClick={() =>
-            alert("Terms & conditions will be published before launch.")
-          }>
+          <button
+            type="button"
+            onClick={() =>
+              alert(
+                "Terms & conditions will be published before launch."
+              )
+            }
+          >
             Terms
           </button>
 
@@ -877,23 +1033,24 @@ function App() {
         © 2026 SS PASSION. ALL RIGHTS RESERVED.
       </div>
 
-      {/* PRODUCT MODAL */}
-
       {selectedProduct && (
 
         <div
           className="modal-backdrop"
-          onClick={() => setSelectedProduct(null)}
+          onClick={closeProduct}
         >
 
           <div
             className="product-modal"
-            onClick={(event) => event.stopPropagation()}
+            onClick={(event) =>
+              event.stopPropagation()
+            }
           >
 
             <button
               className="close-modal"
-              onClick={() => setSelectedProduct(null)}
+              type="button"
+              onClick={closeProduct}
             >
               ×
             </button>
@@ -923,20 +1080,30 @@ function App() {
 
               <div className="selector">
 
-                <strong>COLOUR</strong>
+                <strong>
+                  COLOUR
+                </strong>
 
                 <div className="options">
 
-                  {selectedProduct.colors.map((color) => (
-  <button
-    key={color}
-    type="button"
-    className={selectedColor === color ? "selected" : ""}
-    onClick={() => setSelectedColor(color)}
-  >
-    {color}
-  </button>
-))}
+                  {selectedProduct.colors.map(
+                    (color) => (
+                      <button
+                        key={color}
+                        type="button"
+                        className={
+                          selectedColor === color
+                            ? "selected"
+                            : ""
+                        }
+                        onClick={() =>
+                          setSelectedColor(color)
+                        }
+                      >
+                        {color}
+                      </button>
+                    )
+                  )}
 
                 </div>
 
@@ -944,20 +1111,30 @@ function App() {
 
               <div className="selector">
 
-                <strong>SIZE</strong>
+                <strong>
+                  SIZE
+                </strong>
 
                 <div className="options">
 
-                  {selectedProduct.sizes.map((size) => (
-  <button
-    key={size}
-    type="button"
-    className={selectedSize === size ? "selected" : ""}
-    onClick={() => setSelectedSize(size)}
-  >
-    {size}
-  </button>
-))}
+                  {selectedProduct.sizes.map(
+                    (size) => (
+                      <button
+                        key={size}
+                        type="button"
+                        className={
+                          selectedSize === size
+                            ? "selected"
+                            : ""
+                        }
+                        onClick={() =>
+                          setSelectedSize(size)
+                        }
+                      >
+                        {size}
+                      </button>
+                    )
+                  )}
 
                 </div>
 
@@ -965,9 +1142,11 @@ function App() {
 
               <button
                 className="add-to-bag"
+                type="button"
                 onClick={addToCart}
               >
-                ADD TO BAG — ${selectedProduct.price}.00
+                ADD TO BAG — $
+                {selectedProduct.price}.00
               </button>
 
               <p className="delivery">
@@ -984,23 +1163,28 @@ function App() {
 
       )}
 
-      {/* STORY MODAL */}
-
       {selectedStory && (
 
         <div
           className="modal-backdrop"
-          onClick={() => setSelectedStory(null)}
+          onClick={() =>
+            setSelectedStory(null)
+          }
         >
 
           <div
             className="story-modal"
-            onClick={(event) => event.stopPropagation()}
+            onClick={(event) =>
+              event.stopPropagation()
+            }
           >
 
             <button
               className="close-modal"
-              onClick={() => setSelectedStory(null)}
+              type="button"
+              onClick={() =>
+                setSelectedStory(null)
+              }
             >
               ×
             </button>
@@ -1026,6 +1210,7 @@ function App() {
 
               <button
                 className="primary-button"
+                type="button"
                 onClick={() => {
                   setSelectedStory(null);
                   setCategory("All");
@@ -1043,18 +1228,20 @@ function App() {
 
       )}
 
-      {/* WISHLIST */}
-
       {wishlistOpen && (
 
         <div
           className="cart-backdrop"
-          onClick={() => setWishlistOpen(false)}
+          onClick={() =>
+            setWishlistOpen(false)
+          }
         >
 
           <aside
             className="cart"
-            onClick={(event) => event.stopPropagation()}
+            onClick={(event) =>
+              event.stopPropagation()
+            }
           >
 
             <div className="cart-header">
@@ -1064,7 +1251,10 @@ function App() {
               </h2>
 
               <button
-                onClick={() => setWishlistOpen(false)}
+                type="button"
+                onClick={() =>
+                  setWishlistOpen(false)
+                }
               >
                 ×
               </button>
@@ -1080,7 +1270,10 @@ function App() {
                 </p>
 
                 <button
-                  onClick={() => setWishlistOpen(false)}
+                  type="button"
+                  onClick={() =>
+                    setWishlistOpen(false)
+                  }
                 >
                   CONTINUE SHOPPING
                 </button>
@@ -1091,50 +1284,54 @@ function App() {
 
               <div className="cart-items">
 
-                {wishlistProducts.map((product) => (
+                {wishlistProducts.map(
+                  (product) => (
 
-                  <div
-                    className="cart-item"
-                    key={product.id}
-                  >
+                    <div
+                      className="cart-item"
+                      key={product.id}
+                    >
 
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                    />
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                      />
 
-                    <div>
+                      <div>
 
-                      <h3>
-                        {product.name}
-                      </h3>
+                        <h3>
+                          {product.name}
+                        </h3>
 
-                      <strong>
-                        ${product.price}.00
-                      </strong>
+                        <strong>
+                          ${product.price}.00
+                        </strong>
 
-                      <button
-                        onClick={() => {
-                          setWishlistOpen(false);
-                          openProduct(product);
-                        }}
-                      >
-                        VIEW PRODUCT
-                      </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setWishlistOpen(false);
+                            openProduct(product);
+                          }}
+                        >
+                          VIEW PRODUCT
+                        </button>
 
-                      <button
-                        onClick={() =>
-                          toggleWishlist(product.id)
-                        }
-                      >
-                        REMOVE
-                      </button>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            toggleWishlist(product.id)
+                          }
+                        >
+                          REMOVE
+                        </button>
+
+                      </div>
 
                     </div>
 
-                  </div>
-
-                ))}
+                  )
+                )}
 
               </div>
 
@@ -1146,18 +1343,20 @@ function App() {
 
       )}
 
-      {/* CART */}
-
       {cartOpen && (
 
         <div
           className="cart-backdrop"
-          onClick={() => setCartOpen(false)}
+          onClick={() =>
+            setCartOpen(false)
+          }
         >
 
           <aside
             className="cart"
-            onClick={(event) => event.stopPropagation()}
+            onClick={(event) =>
+              event.stopPropagation()
+            }
           >
 
             <div className="cart-header">
@@ -1167,7 +1366,10 @@ function App() {
               </h2>
 
               <button
-                onClick={() => setCartOpen(false)}
+                type="button"
+                onClick={() =>
+                  setCartOpen(false)
+                }
               >
                 ×
               </button>
@@ -1183,7 +1385,10 @@ function App() {
                 </p>
 
                 <button
-                  onClick={() => setCartOpen(false)}
+                  type="button"
+                  onClick={() =>
+                    setCartOpen(false)
+                  }
                 >
                   CONTINUE SHOPPING
                 </button>
@@ -1219,12 +1424,17 @@ function App() {
                         </p>
 
                         <strong>
-                          ${(item.price * item.quantity).toFixed(2)}
+                          $
+                          {(
+                            item.price *
+                            item.quantity
+                          ).toFixed(2)}
                         </strong>
 
                         <div className="quantity-control">
 
                           <button
+                            type="button"
                             onClick={() =>
                               updateQuantity(
                                 item.cartId,
@@ -1240,6 +1450,7 @@ function App() {
                           </span>
 
                           <button
+                            type="button"
                             onClick={() =>
                               updateQuantity(
                                 item.cartId,
@@ -1253,8 +1464,11 @@ function App() {
                         </div>
 
                         <button
+                          type="button"
                           onClick={() =>
-                            removeFromCart(item.cartId)
+                            removeFromCart(
+                              item.cartId
+                            )
                           }
                         >
                           REMOVE
@@ -1284,13 +1498,17 @@ function App() {
 
                   {total < 150 && (
                     <p className="shipping-progress">
-                      ${(150 - total).toFixed(2)} away from
-                      FREE international shipping.
+                      $
+                      {(150 - total).toFixed(2)}
+                      {" "}
+                      away from FREE
+                      international shipping.
                     </p>
                   )}
 
                   <button
                     className="checkout-button"
+                    type="button"
                     onClick={() =>
                       alert(
                         "Secure checkout will be connected in the next step."
@@ -1316,6 +1534,8 @@ function App() {
   );
 }
 
-createRoot(document.getElementById("root")).render(
+createRoot(
+  document.getElementById("root")
+).render(
   <App />
 );
