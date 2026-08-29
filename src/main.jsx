@@ -1,3723 +1,1589 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
-import "./styles.css";
 
-/* =====================================================
-   SS PASSION — PRODUCT DATA
-   Each colour has its own image.
-   ===================================================== */
+/* =========================================================
+   SS PASSION
+   Premium Fashion Store
+   Single-file React application
+   ========================================================= */
 
-const products = [
+const PRODUCTS = [
   {
     id: 1,
-    name: "Signature Oversized Tee",
-    category: "Men",
+    name: "Essential Oversized Tee",
     price: 49,
-    colors: ["Ivory", "Black", "Stone"],
-    sizes: ["S", "M", "L", "XL", "XXL"],
-    image:
-      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1000&q=90",
-    colorImages: {
-      Ivory:
-        "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1000&q=90",
-      Black:
-        "https://images.unsplash.com/photo-1503341504253-dff4815485f1?auto=format&fit=crop&w=1000&q=90",
-      Stone:
-        "https://images.unsplash.com/photo-1562157873-818bc0726f68?auto=format&fit=crop&w=1000&q=90",
-    },
+    category: "Unisex",
+    type: "T-Shirts",
+    badge: "BESTSELLER",
+    description:
+      "A refined everyday essential with a relaxed silhouette, premium cotton feel and effortless proportions.",
+    colors: [
+      { name: "Ivory", hex: "#eee8dc" },
+      { name: "Black", hex: "#171717" },
+      { name: "Stone", hex: "#a59d8e" },
+    ],
+    sizes: ["XS", "S", "M", "L", "XL"],
+    images: [
+      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1200&q=85",
+      "https://images.unsplash.com/photo-1503341504253-dff4815485f1?auto=format&fit=crop&w=1200&q=85",
+    ],
   },
-
   {
     id: 2,
-    name: "Premium Relaxed Shirt",
-    category: "Men",
-    price: 75,
-    colors: ["White", "Sand", "Black"],
-    sizes: ["S", "M", "L", "XL"],
-    image:
-      "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=1000&q=90",
-    colorImages: {
-      White:
-        "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=1000&q=90",
-      Sand:
-        "https://images.unsplash.com/photo-1603252110481-7ba873bf42ab?auto=format&fit=crop&w=1000&q=90",
-      Black:
-        "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?auto=format&fit=crop&w=1000&q=90",
-    },
+    name: "Signature Blazer",
+    price: 129,
+    category: "Women",
+    type: "Tailoring",
+    badge: "SIGNATURE",
+    description:
+      "Clean tailoring meets modern ease in a versatile blazer designed to move from day to evening.",
+    colors: [
+      { name: "Sand", hex: "#c8b9a2" },
+      { name: "Black", hex: "#171717" },
+      { name: "Charcoal", hex: "#474747" },
+    ],
+    sizes: ["XS", "S", "M", "L", "XL"],
+    images: [
+      "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=1200&q=85",
+      "https://images.unsplash.com/photo-1591369822096-ffd140ec948f?auto=format&fit=crop&w=1200&q=85",
+    ],
   },
-
   {
     id: 3,
-    name: "Essential Polo",
-    category: "Men",
-    price: 65,
-    colors: ["Cream", "Charcoal", "Olive"],
-    sizes: ["S", "M", "L", "XL", "XXL"],
-    image:
-      "https://images.unsplash.com/photo-1625910513413-5fc45b7b9e72?auto=format&fit=crop&w=1000&q=90",
-    colorImages: {
-      Cream:
-        "https://images.unsplash.com/photo-1625910513413-5fc45b7b9e72?auto=format&fit=crop&w=1000&q=90",
-      Charcoal:
-        "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?auto=format&fit=crop&w=1000&q=90",
-      Olive:
-        "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=1000&q=90",
-    },
+    name: "Essential Hoodie",
+    price: 79,
+    category: "Unisex",
+    type: "Knitwear",
+    badge: "ESSENTIAL",
+    description:
+      "A substantial everyday hoodie balancing comfort, structure and a quietly premium finish.",
+    colors: [
+      { name: "Oat", hex: "#d8ccb8" },
+      { name: "Black", hex: "#151515" },
+      { name: "Grey", hex: "#8b8b88" },
+    ],
+    sizes: ["XS", "S", "M", "L", "XL"],
+    images: [
+      "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=1200&q=85",
+      "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=1200&q=85",
+    ],
   },
-
   {
     id: 4,
-    name: "Tailored Relaxed Trousers",
+    name: "Linen Relaxed Shirt",
+    price: 69,
     category: "Men",
-    price: 89,
-    colors: ["Black", "Taupe", "Stone"],
-    sizes: ["S", "M", "L", "XL"],
-    image:
-      "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=1000&q=90",
-    colorImages: {
-      Black:
-        "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=1000&q=90",
-      Taupe:
-        "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=1000&q=90",
-      Stone:
-        "https://images.unsplash.com/photo-1624378440072-ecaa0b9c0c7a?auto=format&fit=crop&w=1000&q=90",
-    },
+    type: "Shirts",
+    badge: "NEW",
+    description:
+      "Lightweight linen with a relaxed cut for warm days, layered looks and understated summer dressing.",
+    colors: [
+      { name: "Natural", hex: "#ddd1bb" },
+      { name: "White", hex: "#f4f3ef" },
+      { name: "Olive", hex: "#73725c" },
+    ],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    images: [
+      "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=1200&q=85",
+      "https://images.unsplash.com/photo-1603252110481-7ba873bf42ab?auto=format&fit=crop&w=1200&q=85",
+    ],
   },
-
   {
     id: 5,
-    name: "Signature Blazer",
+    name: "Relaxed Tailored Trouser",
+    price: 89,
     category: "Men",
-    price: 149,
-    colors: ["Charcoal", "Beige"],
-    sizes: ["S", "M", "L", "XL"],
-    image:
-      "https://images.unsplash.com/photo-1598808503746-f34c53b9323e?auto=format&fit=crop&w=1000&q=90",
-    colorImages: {
-      Charcoal:
-        "https://images.unsplash.com/photo-1598808503746-f34c53b9323e?auto=format&fit=crop&w=1000&q=90",
-      Beige:
-        "https://images.unsplash.com/photo-1555069519-127aadedf1ee?auto=format&fit=crop&w=1000&q=90",
-    },
+    type: "Trousers",
+    badge: "NEW",
+    description:
+      "A modern relaxed trouser with tailored lines, designed for everyday sophistication.",
+    colors: [
+      { name: "Taupe", hex: "#9e907b" },
+      { name: "Black", hex: "#171717" },
+      { name: "Cream", hex: "#e5dccb" },
+    ],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    images: [
+      "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&fit=crop&w=1200&q=85",
+      "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=1200&q=85",
+    ],
   },
-
   {
     id: 6,
-    name: "Minimal Overshirt",
-    category: "Men",
-    price: 85,
-    colors: ["Stone", "Black", "Olive"],
-    sizes: ["S", "M", "L", "XL"],
-    image:
-      "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?auto=format&fit=crop&w=1000&q=90",
-    colorImages: {
-      Stone:
-        "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?auto=format&fit=crop&w=1000&q=90",
-      Black:
-        "https://images.unsplash.com/photo-1603252109303-2751441dd157?auto=format&fit=crop&w=1000&q=90",
-      Olive:
-        "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=1000&q=90",
-    },
+    name: "Minimal Ribbed Dress",
+    price: 99,
+    category: "Women",
+    type: "Dresses",
+    badge: "EDITORIAL",
+    description:
+      "A clean ribbed silhouette designed around simplicity, movement and modern feminine lines.",
+    colors: [
+      { name: "Cream", hex: "#e7dfd0" },
+      { name: "Black", hex: "#181818" },
+      { name: "Mocha", hex: "#766052" },
+    ],
+    sizes: ["XS", "S", "M", "L", "XL"],
+    images: [
+      "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?auto=format&fit=crop&w=1200&q=85",
+      "https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=1200&q=85",
+    ],
   },
-
   {
     id: 7,
-    name: "Relaxed Satin Shirt",
-    category: "Women",
-    price: 79,
-    colors: ["Champagne", "Black", "Ivory"],
-    sizes: ["XS", "S", "M", "L", "XL"],
-    image:
-      "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=1000&q=90",
-    colorImages: {
-      Champagne:
-        "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=1000&q=90",
-      Black:
-        "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?auto=format&fit=crop&w=1000&q=90",
-      Ivory:
-        "https://images.unsplash.com/photo-1598554747436-c9293d6a588f?auto=format&fit=crop&w=1000&q=90",
-    },
+    name: "Structured Overshirt",
+    price: 109,
+    category: "Men",
+    type: "Outerwear",
+    badge: "SIGNATURE",
+    description:
+      "A structured overshirt combining the utility of outerwear with the polish of modern tailoring.",
+    colors: [
+      { name: "Stone", hex: "#aaa08f" },
+      { name: "Black", hex: "#181818" },
+      { name: "Olive", hex: "#65664f" },
+    ],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    images: [
+      "https://images.unsplash.com/photo-1598032895397-b9472444bf93?auto=format&fit=crop&w=1200&q=85",
+      "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=1200&q=85",
+    ],
   },
-
   {
     id: 8,
-    name: "Minimal Midi Dress",
+    name: "Soft Knit Cardigan",
+    price: 95,
     category: "Women",
-    price: 109,
-    colors: ["Black", "Cream", "Taupe"],
+    type: "Knitwear",
+    badge: "NEW",
+    description:
+      "Soft-touch knitwear with an elevated relaxed shape, ideal for transitional layering.",
+    colors: [
+      { name: "Ivory", hex: "#e9e0cf" },
+      { name: "Camel", hex: "#b49a79" },
+      { name: "Black", hex: "#191919" },
+    ],
     sizes: ["XS", "S", "M", "L", "XL"],
-    image:
-      "https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=1000&q=90",
-    colorImages: {
-      Black:
-        "https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=1000&q=90",
-      Cream:
-        "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=1000&q=90",
-      Taupe:
-        "https://images.unsplash.com/photo-1572804013427-4d7ca7268217?auto=format&fit=crop&w=1000&q=90",
-    },
+    images: [
+      "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=1200&q=85",
+      "https://images.unsplash.com/photo-1618932260643-eee4a2f652a6?auto=format&fit=crop&w=1200&q=85",
+    ],
   },
-
   {
     id: 9,
-    name: "Wide-Leg Trousers",
-    category: "Women",
-    price: 95,
-    colors: ["Beige", "Black", "Stone"],
-    sizes: ["XS", "S", "M", "L", "XL"],
-    image:
-      "https://images.unsplash.com/photo-1506629905607-d9c297d4f3e1?auto=format&fit=crop&w=1000&q=90",
-    colorImages: {
-      Beige:
-        "https://images.unsplash.com/photo-1506629905607-d9c297d4f3e1?auto=format&fit=crop&w=1000&q=90",
-      Black:
-        "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=1000&q=90",
-      Stone:
-        "https://images.unsplash.com/photo-1584865288642-42078afe6942?auto=format&fit=crop&w=1000&q=90",
-    },
-  },
-
-  {
-    id: 10,
-    name: "Signature Knit Cardigan",
-    category: "Women",
-    price: 99,
-    colors: ["Cream", "Brown", "Black"],
-    sizes: ["XS", "S", "M", "L", "XL"],
-    image:
-      "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&w=1000&q=90",
-    colorImages: {
-      Cream:
-        "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&w=1000&q=90",
-      Brown:
-        "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=1000&q=90",
-      Black:
-        "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?auto=format&fit=crop&w=1000&q=90",
-    },
-  },
-
-  {
-    id: 11,
-    name: "Premium Knit Sweater",
-    category: "Unisex",
-    price: 95,
-    colors: ["Cream", "Charcoal", "Brown"],
-    sizes: ["S", "M", "L", "XL"],
-    image:
-      "https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=1000&q=90",
-    colorImages: {
-      Cream:
-        "https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=1000&q=90",
-      Charcoal:
-        "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1000&q=90",
-      Brown:
-        "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=1000&q=90",
-    },
-  },
-
-  {
-    id: 12,
-    name: "Straight-Leg Denim",
-    category: "Unisex",
-    price: 89,
-    colors: ["Indigo", "Washed Black"],
-    sizes: ["28", "30", "32", "34", "36"],
-    image:
-      "https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=1000&q=90",
-    colorImages: {
-      Indigo:
-        "https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=1000&q=90",
-      "Washed Black":
-        "https://images.unsplash.com/photo-1602293589930-45aad59ba3ab?auto=format&fit=crop&w=1000&q=90",
-    },
-  },
-];
-
-/* =====================================================
-   JOURNAL
-   ===================================================== */
-
-const stories = [
-  {
-    id: 1,
-    tag: "STYLE GUIDE",
-    title: "The New Definition of Everyday Style",
-    text:
-      "Discover simple ways to build a refined wardrobe that feels modern without following every trend.",
-    image:
-      "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=90",
-  },
-  {
-    id: 2,
-    tag: "SS PASSION",
-    title: "Building a Timeless Wardrobe",
-    text:
-      "A thoughtful wardrobe starts with versatile pieces that work together season after season.",
-    image:
-      "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1200&q=90",
-  },
-  {
-    id: 3,
-    tag: "THE EDIT",
-    title: "Modern Fashion Without Limits",
-    text:
-      "Explore the SS PASSION approach to effortless silhouettes, confident details and personal style.",
-    image:
-      "https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=1200&q=90",
-  },
-];
-
-/* =====================================================
-   APP
-   ===================================================== */
-
-function App() {
-  const [category, setCategory] = useState("All");
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [search, setSearch] = useState("");
-
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [selectedStory, setSelectedStory] = useState(null);
-
-  const [selectedSize, setSelectedSize] = useState("");
-  const [selectedColor, setSelectedColor] = useState("");
-
-  const [cart, setCart] = useState([]);
-  const [wishlist, setWishlist] = useState([]);
-
-  const [cartOpen, setCartOpen] = useState(false);
-  const [wishlistOpen, setWishlistOpen] = useState(false);
-
-  /* =====================================================
-     SCROLL
-     ===================================================== */
-
-  const scrollTo = (id) => {
-    const element = document.getElementById(id);
-
-    if (element) {
-      element.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
-  };
-
-  /* =====================================================
-     FILTER
-     ===================================================== */
-
-  const filteredProducts = products.filter((product) => {
-    const categoryMatch =
-      category === "All" ||
-      product.category === category ||
-      product.category === "Unisex";
-
-    const searchMatch = product.name
-      .toLowerCase()
-      .includes(search.toLowerCase());
-
-    return categoryMatch && searchMatch;
-  });
-
-  /* =====================================================
-     OPEN PRODUCT
-     ===================================================== */
-
-  const openProduct = (product) => {
-    const firstColor = product.colors[0];
-    const firstSize = product.sizes[0];
-
-    setSelectedProduct(product);
-    setSelectedColor(firstColor);
-    setSelectedSize(firstSize);
-  };
-
-  /* =====================================================
-     CLOSE PRODUCT
-     ===================================================== */
-
-  const closeProduct = () => {
-    setSelectedProduct(null);
-    setSelectedColor("");
-    setSelectedSize("");
-  };
-
-  /* =====================================================
-     GET CURRENT PRODUCT IMAGE
-     
-     THIS IS THE IMPORTANT FIX.
-     
-     The image changes whenever selectedColor changes.
-     ===================================================== */
-
-  const getSelectedProductImage = () => {
-    if (!selectedProduct) return "";
-
-    return (
-      selectedProduct.colorImages?.[selectedColor] ||
-      selectedProduct.image
-    );
-  };
-
-  /* =====================================================
-     ADD TO CART
-     ===================================================== */
-
-  const addToCart = () => {
-    if (!selectedProduct) return;
-
-    if (!selectedColor || !selectedSize) {
-      alert("Please select a colour and size.");
-      return;
-    }
-
-    const selectedImage = getSelectedProductImage();
-
-    const cartId =
-      selectedProduct.id +
-      "-" +
-      selectedSize +
-      "-" +
-      selectedColor;
-
-    setCart((current) => {
-      const existing = current.find(
-        (item) => item.cartId === cartId
-      );
-
-      if (existing) {
-        return current.map((item) =>
-          item.cartId === cartId
-            ? {
-                ...item,
-                quantity: item.quantity + 1,
-              }
-            : item
-        );
-      }
-
-      return [
-        ...current,
-        {
-          ...selectedProduct,
-
-          /* Save selected variant */
-          size: selectedSize,
-          color: selectedColor,
-
-          /* Save the selected colour image */
-          image: selectedImage,
-
-          cartId,
-          quantity: 1,
-        },
-      ];
-    });
-
-    closeProduct();
-    setCartOpen(true);
-  };
-
-  /* =====================================================
-     QUANTITY
-     ===================================================== */
-
-  const updateQuantity = (cartId, change) => {
-    setCart((current) =>
-      current
-        .map((item) =>
-          item.cartId === cartId
-            ? {
-                ...item,
-                quantity: item.quantity + change,
-              }
-            : item
-        )
-        .filter((item) => item.quantity > 0)
-    );
-  };
-
-  /* =====================================================
-     REMOVE CART
-     ===================================================== */
-
-  const removeFromCart = (cartId) => {
-    setCart((current) =>
-      current.filter((item) => item.cartId !== cartId)
-    );
-  };
-
-  /* =====================================================
-     WISHLIST
-     ===================================================== */
-
-  const toggleWishlist = (id) => {
-    setWishlist((current) =>
-      current.includes(id)
-        ? current.filter((item) => item !== id)
-        : [...current, id]
-    );
-  };
-
-  /* =====================================================
-     TOTALS
-     ===================================================== */
-
-  const totalItems = cart.reduce(
-    (sum, item) => sum + item.quantity,
-    0
-  );
-
-  const total = cart.reduce(
-    (sum, item) =>
-      sum + item.price * item.quantity,
-    0
-  );
-
-  const wishlistProducts = products.filter(
-    (product) => wishlist.includes(product.id)
-  );
-
-  /* =====================================================
-     RENDER
-     ===================================================== */
-
-  return (
-    <div className="app">
-
-      {/* ANNOUNCEMENT */}
-
-      <div className="announcement">
-        FREE INTERNATIONAL SHIPPING ON ORDERS OVER $150
-      </div>
-
-      {/* HEADER */}
-
-      <header className="header">
-
-        <button
-          className="mobile-menu"
-          type="button"
-          onClick={() => scrollTo("collections")}
-        >
-          ☰
-        </button>
-
-        <button
-          className="logo"
-          type="button"
-          onClick={() =>
-            window.scrollTo({
-              top: 0,
-              behavior: "smooth",
-            })
-          }
-        >
-          <span className="logo-mark">
-            SS
-          </span>
-
-          <span>
-            PASSION
-          </span>
-        </button>
-
-        <nav className="nav">
-
-          <button
-            type="button"
-            onClick={() => {
-              setCategory("Men");
-              scrollTo("collections");
-            }}
-          >
-            MEN
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              setCategory("Women");
-              scrollTo("collections");
-            }}
-          >
-            WOMEN
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              setCategory("All");
-              scrollTo("collections");
-            }}
-          >
-            NEW ARRIVALS
-          </button>
-
-          <button
-            type="button"
-            onClick={() =>
-              scrollTo("collections")
-            }
-          >
-            COLLECTIONS
-          </button>
-
-          <button
-            type="button"
-            onClick={() =>
-              scrollTo("journal")
-            }
-          >
-            JOURNAL
-          </button>
-
-        </nav>
-
-        <div className="header-actions">
-
-          <button
-            type="button"
-            onClick={() =>
-              setSearchOpen(!searchOpen)
-            }
-            aria-label="Search"
-          >
-            ⌕
-          </button>
-
-          <button
-            type="button"
-            onClick={() =>
-              setWishlistOpen(true)
-            }
-            aria-label="Wishlist"
-          >
-            {wishlist.length > 0
-              ? "♥"
-              : "♡"}
-          </button>
-
-          <button
-            type="button"
-            onClick={() =>
-              setCartOpen(true)
-            }
-          >
-            BAG ({totalItems})
-          </button>
-
-        </div>
-
-      </header>
-
-      {/* SEARCH */}
-
-      {searchOpen && (
-        <div className="search-panel">
-
-          <input
-            autoFocus
-            type="search"
-            value={search}
-            onChange={(event) =>
-              setSearch(event.target.value)
-            }
-            onKeyDown={(event) => {
-              if (event.key === "Enter") {
-                setSearchOpen(false);
-                scrollTo("collections");
-              }
-            }}
-            placeholder="Search products..."
-          />
-
-          <button
-            type="button"
-            onClick={() => {
-              setSearch("");
-              setSearchOpen(false);
-            }}
-          >
-            ×
-          </button>
-
-        </div>
-      )}
-
-      {/* HERO */}
-
-      <section className="hero">
-
-        <div className="hero-overlay"></div>
-
-        <div className="hero-content">
-
-          <p className="eyebrow">
-            SS PASSION — NEW SEASON
-          </p>
-
-          <h1>
-            WEAR YOUR
-            <br />
-            PASSION.
-          </h1>
-
-          <p className="hero-subtitle">
-            Timeless pieces. Modern attitude.
-          </p>
-
-          <div className="hero-buttons">
-
-            <button
-              className="primary-button"
-              type="button"
-              onClick={() => {
-                setCategory("Men");
-                scrollTo("collections");
-              }}
-            >
-              SHOP MEN
-            </button>
-
-            <button
-              className="secondary-button"
-              type="button"
-              onClick={() => {
-                setCategory("Women");
-                scrollTo("collections");
-              }}
-            >
-              SHOP WOMEN
-            </button>
-
-          </div>
-
-        </div>
-
-      </section>
-
-      {/* INTRO */}
-
-      <section className="intro">
-
-        <p className="eyebrow">
-          THE SS PASSION EDIT
-        </p>
-
-        <h2>
-          Modern fashion
-          <br />
-          with timeless appeal.
-        </h2>
-
-        <p className="intro-text">
-          Thoughtfully designed essentials for
-          modern life, created to move across
-          seasons and generations.
-        </p>
-
-      </section>
-
-      {/* COLLECTION */}
-
-      <section
-        className="collection-section"
-        id="collections"
-      >
-
-        <div className="section-heading">
-
-          <div>
-
-            <p className="eyebrow">
-              DISCOVER
-            </p>
-
-            <h2>
-              {search
-                ? `Search: ${search}`
-                : category === "All"
-                ? "New Arrivals"
-                : category}
-            </h2>
-
-          </div>
-
-          <div className="category-buttons">
-
-            <button
-              type="button"
-              className={
-                category === "All"
-                  ? "active"
-                  : ""
-              }
-              onClick={() =>
-                setCategory("All")
-              }
-            >
-              ALL
-            </button>
-
-            <button
-              type="button"
-              className={
-                category === "Men"
-                  ? "active"
-                  : ""
-              }
-              onClick={() =>
-                setCategory("Men")
-              }
-            >
-              MEN
-            </button>
-
-            <button
-              type="button"
-              className={
-                category === "Women"
-                  ? "active"
-                  : ""
-              }
-              onClick={() =>
-                setCategory("Women")
-              }
-            >
-              WOMEN
-            </button>
-
-          </div>
-
-        </div>
-
-        <div className="products">
-
-          {filteredProducts.length === 0 ? (
-
-            <div className="empty-search">
-
-              <h3>
-                No products found.
-              </h3>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setSearch("");
-                  setCategory("All");
-                }}
-              >
-                VIEW ALL PRODUCTS
-              </button>
-
-            </div>
-
-          ) : (
-
-            filteredProducts.map(
-              (product) => (
-
-                <article
-                  className="product"
-                  key={product.id}
-                >
-
-                  <div
-                    className="product-image-wrap"
-                    onClick={() =>
-                      openProduct(product)
-                    }
-                  >
-
-                    <img
-                      className="product-image"
-                      src={product.image}
-                      alt={product.name}
-                    />
-
-                    <span className="new-badge">
-                      NEW
-                    </span>
-
-                    <button
-                      className="wishlist"
-                      type="button"
-                      aria-label="Add to wishlist"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        toggleWishlist(
-                          product.id
-                        );
-                      }}
-                    >
-                      {wishlist.includes(
-                        product.id
-                      )
-                        ? "♥"
-                        : "♡"}
-                    </button>
-
-                    <button
-                      className="quick-add"
-                      type="button"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        openProduct(product);
-                      }}
-                    >
-                      QUICK VIEW
-                    </button>
-
-                  </div>
-
-                  <div className="product-info">
-
-                    <div>
-
-                      <p className="product-category">
-                        {product.category}
-                      </p>
-
-                      <h3>
-                        {product.name}
-                      </h3>
-
-                    </div>
-
-                    <p className="product-price">
-                      ${product.price}.00
-                    </p>
-
-                  </div>
-
-                </article>
-
-              )
-            )
-
-          )}
-
-        </div>
-
-      </section>
-
-      {/* EDITORIAL */}
-
-      <section className="editorial">
-
-        <div className="editorial-image"></div>
-
-        <div className="editorial-content">
-
-          <p className="eyebrow">
-            THE COLLECTION
-          </p>
-
-          <h2>
-            Made for
-            <br />
-            every day.
-          </h2>
-
-          <p>
-            Refined silhouettes, considered
-            fabrics and effortless pieces designed
-            to become part of your everyday
-            wardrobe.
-          </p>
-
-          <button
-            className="text-link"
-            type="button"
-            onClick={() => {
-              setCategory("All");
-              scrollTo("collections");
-            }}
-          >
-            EXPLORE COLLECTIONS →
-          </button>
-
-        </div>
-
-      </section>
-
-      {/* STORY */}
-
-      <section
-        className="story"
-        id="story"
-      >
-
-        <div className="story-content">
-
-          <p className="eyebrow">
-            OUR PHILOSOPHY
-          </p>
-
-          <h2>
-            Style should
-            <br />
-            feel like you.
-          </h2>
-
-          <p>
-            SS PASSION exists for modern
-            individuals who want fashion to feel
-            personal, effortless and timeless.
-          </p>
-
-          <p>
-            We create pieces designed to move
-            with you through different moments,
-            seasons and generations.
-          </p>
-
-        </div>
-
-      </section>
-
-      {/* TRUST */}
-
-      <section className="trust">
-
-        <div>
-          <strong>
-            WORLDWIDE SHIPPING
-          </strong>
-          <span>
-            Delivered internationally
-          </span>
-        </div>
-
-        <div>
-          <strong>
-            SECURE PAYMENTS
-          </strong>
-          <span>
-            Safe & protected checkout
-          </span>
-        </div>
-
-        <div>
-          <strong>
-            EASY RETURNS
-          </strong>
-          <span>
-            Simple return experience
-          </span>
-        </div>
-
-        <div>
-          <strong>
-            CUSTOMER SUPPORT
-          </strong>
-          <span>
-            We're here to help
-          </span>
-        </div>
-
-      </section>
-
-      {/* JOURNAL */}
-
-      <section
-        className="journal"
-        id="journal"
-      >
-
-        <div className="section-heading">
-
-          <div>
-
-            <p className="eyebrow">
-              FROM THE JOURNAL
-            </p>
-
-            <h2>
-              Stories & Style
-            </h2>
-
-          </div>
-
-          <button
-            className="journal-link"
-            type="button"
-            onClick={() =>
-              scrollTo("journal")
-            }
-          >
-            EXPLORE →
-          </button>
-
-        </div>
-
-        <div className="journal-grid">
-
-          {stories.map((story) => (
-
-            <article
-              key={story.id}
-              onClick={() =>
-                setSelectedStory(story)
-              }
-              role="button"
-              tabIndex={0}
-              onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  setSelectedStory(story);
-                }
-              }}
-            >
-
-              <div
-                className="journal-image"
-                style={{
-                  backgroundImage:
-                    `url("${story.image}")`,
-                }}
-              ></div>
-
-              <p>
-                {story.tag}
-              </p>
-
-              <h3>
-                {story.title}
-              </h3>
-
-              <span className="read-story">
-                READ STORY →
-              </span>
-
-            </article>
-
-          ))}
-
-        </div>
-
-      </section>
-
-      {/* NEWSLETTER */}
-
-      <section className="newsletter">
-
-        <p className="eyebrow">
-          JOIN SS PASSION
-        </p>
-
-        <h2>
-          Be the first to discover
-          <br />
-          new drops & stories.
-        </h2>
-
-        <form
-          className="newsletter-form"
-          onSubmit={(event) => {
-            event.preventDefault();
-
-            alert(
-              "Welcome to SS PASSION."
-            );
-          }}
-        >
-
-          <input
-            type="email"
-            required
-            placeholder="Your email address"
-          />
-
-          <button type="submit">
-            JOIN
-          </button>
-
-        </form>
-
-      </section>
-
-      {/* FOOTER */}
-
-      <footer>
-
-        <div className="footer-brand">
-
-          <div className="footer-logo">
-
-            <span>
-              SS
-            </span>
-
-            PASSION
-
-          </div>
-
-          <p>
-            Modern fashion with timeless appeal.
-          </p>
-
-        </div>
-
-        <div>
-
-          <h4>
-            SHOP
-          </h4>
-
-          <button
-            type="button"
-            onClick={() => {
-              setCategory("Men");
-              scrollTo("collections");
-            }}
-          >
-            Men
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              setCategory("Women");
-              scrollTo("collections");
-            }}
-          >
-            Women
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              setCategory("All");
-              scrollTo("collections");
-            }}
-          >
-            New Arrivals
-          </button>
-
-          <button
-            type="button"
-            onClick={() =>
-              scrollTo("collections")
-            }
-          >
-            Collections
-          </button>
-
-        </div>
-
-        <div>
-
-          <h4>
-            HELP
-          </h4>
-
-          <button
-            type="button"
-            onClick={() =>
-              alert(
-                "Shipping information will be available at checkout."
-              )
-            }
-          >
-            Shipping
-          </button>
-
-          <button
-            type="button"
-            onClick={() =>
-              alert(
-                "Our return policy will be available soon."
-              )
-            }
-          >
-            Returns
-          </button>
-
-          <button
-            type="button"
-            onClick={() =>
-              alert(
-                "Size guide coming soon."
-              )
-            }
-          >
-            Size Guide
-          </button>
-
-          <button
-            type="button"
-            onClick={() =>
-              alert("FAQ coming soon.")
-            }
-          >
-            FAQ
-          </button>
-
-        </div>
-
-        <div>
-
-          <h4>
-            ABOUT
-          </h4>
-
-          <button
-            type="button"
-            onClick={() =>
-              scrollTo("story")
-            }
-          >
-            Our Story
-          </button>
-
-          <button
-            type="button"
-            onClick={() =>
-              scrollTo("journal")
-            }
-          >
-            Journal
-          </button>
-
-          <button
-            type="button"
-            onClick={() =>
-              alert(
-                "Privacy policy will be published before launch."
-              )
-            }
-          >
-            Privacy
-          </button>
-
-          <button
-            type="button"
-            onClick={() =>
-              alert(
-                "Terms & conditions will be published before launch."
-              )
-            }
-          >
-            Terms
-          </button>
-
-        </div>
-
-      </footer>
-
-      {/* COPYRIGHT */}
-
-      <div className="copyright">
-        © 2026 SS PASSION. ALL RIGHTS RESERVED.
-      </div>
-
-      {/* =====================================================
-          PRODUCT MODAL
-          ===================================================== */}
-
-      {selectedProduct && (
-
-        <div
-          className="modal-backdrop"
-          onClick={closeProduct}
-        >
-
-          <div
-            className="product-modal"
-            onClick={(event) =>
-              event.stopPropagation()
-            }
-          >
-
-            <button
-              className="close-modal"
-              type="button"
-              onClick={closeProduct}
-            >
-              ×
-            </button>
-
-            {/* PRODUCT IMAGE */}
-
-            <div className="modal-image">
-
-              <img
-                src={getSelectedProductImage()}
-                alt={`${selectedProduct.name} - ${selectedColor}`}
-              />
-
-            </div>
-
-            {/* PRODUCT INFO */}
-
-            <div className="modal-info">
-
-              <p className="eyebrow">
-                SS PASSION
-              </p>
-
-              <h2>
-                {selectedProduct.name}
-              </h2>
-
-              <p className="modal-price">
-                ${selectedProduct.price}.00
-              </p>
-
-              {/* COLOUR */}
-
-              <div className="selector">
-
-                <strong>
-                  COLOUR — {selectedColor}
-                </strong>
-
-                <div className="options">
-
-                  {selectedProduct.colors.map(
-                    (color) => (
-
-                      <button
-                        key={color}
-                        type="button"
-                        className={
-                          selectedColor === color
-                            ? "selected"
-                            : ""
-                        }
-                        onClick={() =>
-                          setSelectedColor(color)
-                        }
-                      >
-                        {color}
-                      </button>
-
-                    )
-                  )}
-
-                </div>
-
-              </div>
-
-              {/* SIZE */}
-
-              <div className="selector">
-
-                <strong>
-                  SIZE — {selectedSize}
-                </strong>
-
-                <div className="options">
-
-                  {selectedProduct.sizes.map(
-                    (size) => (
-
-                      <button
-                        key={size}
-                        type="button"
-                        className={
-                          selectedSize === size
-                            ? "selected"
-                            : ""
-                        }
-                        onClick={() =>
-                          setSelectedSize(size)
-                        }
-                      >
-                        {size}
-                      </button>
-
-                    )
-                  )}
-
-                </div>
-
-              </div>
-
-              {/* ADD TO BAG */}
-
-              <button
-                className="add-to-bag"
-                type="button"
-                onClick={addToCart}
-              >
-                ADD TO BAG — $
-                {selectedProduct.price}.00
-              </button>
-
-              <p className="delivery">
-                Worldwide shipping available.
-                Free international shipping on
-                orders over $150.
-              </p>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      )}
-
-      {/* =====================================================
-          STORY MODAL
-          ===================================================== */}
-
-      {selectedStory && (
-
-        <div
-          className="modal-backdrop"
-          onClick={() =>
-            setSelectedStory(null)
-          }
-        >
-
-          <div
-            className="story-modal"
-            onClick={(event) =>
-              event.stopPropagation()
-            }
-          >
-
-            <button
-              className="close-modal"
-              type="button"
-              onClick={() =>
-                setSelectedStory(null)
-              }
-            >
-              ×
-            </button>
-
-            <img
-              src={selectedStory.image}
-              alt={selectedStory.title}
-            />
-
-            <div className="story-modal-content">
-
-              <p className="eyebrow">
-                {selectedStory.tag}
-              </p>
-
-              <h2>
-                {selectedStory.title}
-              </h2>
-
-              <p>
-                {selectedStory.text}
-              </p>
-
-              <button
-                className="primary-button"
-                type="button"
-                onClick={() => {
-                  setSelectedStory(null);
-                  setCategory("All");
-                  scrollTo("collections");
-                }}
-              >
-                SHOP THE EDIT
-              </button>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      )}
-
-      {/* =====================================================
-          WISHLIST
-          ===================================================== */}
-
-      {wishlistOpen && (
-
-        <div
-          className="cart-backdrop"
-          onClick={() =>
-            setWishlistOpen(false)
-          }
-        >
-
-          <aside
-            className="cart"
-            onClick={(event) =>
-              event.stopPropagation()
-            }
-          >
-
-            <div className="cart-header">
-
-              <h2>
-                SAVED ITEMS
-              </h2>
-
-              <button
-                type="button"
-                onClick={() =>
-                  setWishlistOpen(false)
-                }
-              >
-                ×
-              </button>
-
-            </div>
-
-            {wishlistProducts.length === 0 ? (
-
-              <div className="empty-cart">
-
-                <p>
-                  No saved items yet.
-                </p>
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    setWishlistOpen(false)
-                  }
-                >
-                  CONTINUE SHOPPING
-                </button>
-
-              </div>
-
-            ) : (
-
-              <div className="cart-items">
-
-                {wishlistProducts.map(
-                  (product) => (
-
-                    <div
-                      className="cart-item"
-                      key={product.id}
-                    >
-
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                      />
-
-                      <div>
-
-                        <h3>
-                          {product.name}
-                        </h3>
-
-                        <strong>
-                          ${product.price}.00
-                        </strong>
-
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setWishlistOpen(false);
-                            openProduct(product);
-                          }}
-                        >
-                          VIEW PRODUCT
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() =>
-                            toggleWishlist(
-                              product.id
-                            )
-                          }
-                        >
-                          REMOVE
-                        </button>
-
-                      </div>
-
-                    </div>
-
-                  )
-                )}
-
-              </div>
-
-            )}
-
-          </aside>
-
-        </div>
-
-      )}
-
-      {/* =====================================================
-          CART
-          ===================================================== */}
-
-      {cartOpen && (
-
-        <div
-          className="cart-backdrop"
-          onClick={() =>
-            setCartOpen(false)
-          }
-        >
-
-          <aside
-            className="cart"
-            onClick={(event) =>
-              event.stopPropagation()
-            }
-          >
-
-            <div className="cart-header">
-
-              <h2>
-                YOUR BAG
-              </h2>
-
-              <button
-                type="button"
-                onClick={() =>
-                  setCartOpen(false)
-                }
-              >
-                ×
-              </button>
-
-            </div>
-
-            {cart.length === 0 ? (
-
-              <div className="empty-cart">
-
-                <p>
-                  Your bag is currently empty.
-                </p>
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    setCartOpen(false)
-                  }
-                >
-                  CONTINUE SHOPPING
-                </button>
-
-              </div>
-
-            ) : (
-
-              <>
-
-                <div className="cart-items">
-
-                  {cart.map((item) => (
-
-                    <div
-                      className="cart-item"
-                      key={item.cartId}
-                    >
-
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                      />
-
-                      <div>
-
-                        <h3>
-                          {item.name}
-                        </h3>
-
-                        <p>
-                          {item.color} · {item.size}
-                        </p>
-
-                        <strong>
-                          $
-                          {(
-                            item.price *
-                            item.quantity
-                          ).toFixed(2)}
-                        </strong>
-
-                        <div className="quantity-control">
-
-                          <button
-                            type="button"
-                            onClick={() =>
-                              updateQuantity(
-                                item.cartId,
-                                -1
-                              )
-                            }
-                          >
-                            −
-                          </button>
-
-                          <span>
-                            {item.quantity}
-                          </span>
-
-                          <button
-                            type="button"
-                            onClick={() =>
-                              updateQuantity(
-                                item.cartId,
-                                1
-                              )
-                            }
-                          >
-                            +
-                          </button>
-
-                        </div>
-
-                        <button
-                          type="button"
-                          onClick={() =>
-                            removeFromCart(
-                              item.cartId
-                            )
-                          }
-                        >
-                          REMOVE
-                        </button>
-
-                      </div>
-
-                    </div>
-
-                  ))}
-
-                </div>
-
-                <div className="cart-footer">
-
-                  <div className="cart-total">
-
-                    <span>
-                      SUBTOTAL
-                    </span>
-
-                    <strong>
-                      ${total.toFixed(2)}
-                    </strong>
-
-                  </div>
-
-                  {total < 150 && (
-
-                    <p className="shipping-progress">
-
-                      $
-                      {(150 - total).toFixed(2)}
-                      {" "}
-                      away from FREE
-                      international shipping.
-
-                    </p>
-
-                  )}
-
-                  <button
-                    className="checkout-button"
-                    type="button"
-                    onClick={() =>
-                      alert(
-                        "Secure checkout will be connected in the next step."
-                      )
-                    }
-                  >
-                    CHECKOUT
-                  </button>
-
-                </div>
-
-              </>
-
-            )}
-import React, { useState } from "react";
-import { createRoot } from "react-dom/client";
-import "./styles.css";
-
-/* =====================================================
-   SS PASSION — PRODUCT DATA
-   Each colour has its own image.
-   ===================================================== */
-
-const products = [
-  {
-    id: 1,
-    name: "Signature Oversized Tee",
-    category: "Men",
-    price: 49,
-    colors: ["Ivory", "Black", "Stone"],
-    sizes: ["S", "M", "L", "XL", "XXL"],
-    image:
-      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1000&q=90",
-    colorImages: {
-      Ivory:
-        "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1000&q=90",
-      Black:
-        "https://images.unsplash.com/photo-1503341504253-dff4815485f1?auto=format&fit=crop&w=1000&q=90",
-      Stone:
-        "https://images.unsplash.com/photo-1562157873-818bc0726f68?auto=format&fit=crop&w=1000&q=90",
-    },
-  },
-
-  {
-    id: 2,
-    name: "Premium Relaxed Shirt",
-    category: "Men",
-    price: 75,
-    colors: ["White", "Sand", "Black"],
-    sizes: ["S", "M", "L", "XL"],
-    image:
-      "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=1000&q=90",
-    colorImages: {
-      White:
-        "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=1000&q=90",
-      Sand:
-        "https://images.unsplash.com/photo-1603252110481-7ba873bf42ab?auto=format&fit=crop&w=1000&q=90",
-      Black:
-        "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?auto=format&fit=crop&w=1000&q=90",
-    },
-  },
-
-  {
-    id: 3,
-    name: "Essential Polo",
-    category: "Men",
-    price: 65,
-    colors: ["Cream", "Charcoal", "Olive"],
-    sizes: ["S", "M", "L", "XL", "XXL"],
-    image:
-      "https://images.unsplash.com/photo-1625910513413-5fc45b7b9e72?auto=format&fit=crop&w=1000&q=90",
-    colorImages: {
-      Cream:
-        "https://images.unsplash.com/photo-1625910513413-5fc45b7b9e72?auto=format&fit=crop&w=1000&q=90",
-      Charcoal:
-        "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?auto=format&fit=crop&w=1000&q=90",
-      Olive:
-        "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=1000&q=90",
-    },
-  },
-
-  {
-    id: 4,
-    name: "Tailored Relaxed Trousers",
-    category: "Men",
-    price: 89,
-    colors: ["Black", "Taupe", "Stone"],
-    sizes: ["S", "M", "L", "XL"],
-    image:
-      "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=1000&q=90",
-    colorImages: {
-      Black:
-        "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=1000&q=90",
-      Taupe:
-        "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=1000&q=90",
-      Stone:
-        "https://images.unsplash.com/photo-1624378440072-ecaa0b9c0c7a?auto=format&fit=crop&w=1000&q=90",
-    },
-  },
-
-  {
-    id: 5,
-    name: "Signature Blazer",
-    category: "Men",
-    price: 149,
-    colors: ["Charcoal", "Beige"],
-    sizes: ["S", "M", "L", "XL"],
-    image:
-      "https://images.unsplash.com/photo-1598808503746-f34c53b9323e?auto=format&fit=crop&w=1000&q=90",
-    colorImages: {
-      Charcoal:
-        "https://images.unsplash.com/photo-1598808503746-f34c53b9323e?auto=format&fit=crop&w=1000&q=90",
-      Beige:
-        "https://images.unsplash.com/photo-1555069519-127aadedf1ee?auto=format&fit=crop&w=1000&q=90",
-    },
-  },
-
-  {
-    id: 6,
-    name: "Minimal Overshirt",
-    category: "Men",
+    name: "Classic Straight Denim",
     price: 85,
-    colors: ["Stone", "Black", "Olive"],
-    sizes: ["S", "M", "L", "XL"],
-    image:
-      "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?auto=format&fit=crop&w=1000&q=90",
-    colorImages: {
-      Stone:
-        "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?auto=format&fit=crop&w=1000&q=90",
-      Black:
-        "https://images.unsplash.com/photo-1603252109303-2751441dd157?auto=format&fit=crop&w=1000&q=90",
-      Olive:
-        "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=1000&q=90",
-    },
+    category: "Unisex",
+    type: "Denim",
+    badge: "EVERYDAY",
+    description:
+      "A timeless straight-leg denim profile with a clean finish built for everyday styling.",
+    colors: [
+      { name: "Indigo", hex: "#293c55" },
+      { name: "Washed", hex: "#8290a0" },
+      { name: "Black", hex: "#202020" },
+    ],
+    sizes: ["28", "30", "32", "34", "36"],
+    images: [
+      "https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=1200&q=85",
+      "https://images.unsplash.com/photo-1475178626620-a4d074967452?auto=format&fit=crop&w=1200&q=85",
+    ],
   },
-
-  {
-    id: 7,
-    name: "Relaxed Satin Shirt",
-    category: "Women",
-    price: 79,
-    colors: ["Champagne", "Black", "Ivory"],
-    sizes: ["XS", "S", "M", "L", "XL"],
-    image:
-      "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=1000&q=90",
-    colorImages: {
-      Champagne:
-        "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=1000&q=90",
-      Black:
-        "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?auto=format&fit=crop&w=1000&q=90",
-      Ivory:
-        "https://images.unsplash.com/photo-1598554747436-c9293d6a588f?auto=format&fit=crop&w=1000&q=90",
-    },
-  },
-
-  {
-    id: 8,
-    name: "Minimal Midi Dress",
-    category: "Women",
-    price: 109,
-    colors: ["Black", "Cream", "Taupe"],
-    sizes: ["XS", "S", "M", "L", "XL"],
-    image:
-      "https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=1000&q=90",
-    colorImages: {
-      Black:
-        "https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=1000&q=90",
-      Cream:
-        "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=1000&q=90",
-      Taupe:
-        "https://images.unsplash.com/photo-1572804013427-4d7ca7268217?auto=format&fit=crop&w=1000&q=90",
-    },
-  },
-
-  {
-    id: 9,
-    name: "Wide-Leg Trousers",
-    category: "Women",
-    price: 95,
-    colors: ["Beige", "Black", "Stone"],
-    sizes: ["XS", "S", "M", "L", "XL"],
-    image:
-      "https://images.unsplash.com/photo-1506629905607-d9c297d4f3e1?auto=format&fit=crop&w=1000&q=90",
-    colorImages: {
-      Beige:
-        "https://images.unsplash.com/photo-1506629905607-d9c297d4f3e1?auto=format&fit=crop&w=1000&q=90",
-      Black:
-        "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=1000&q=90",
-      Stone:
-        "https://images.unsplash.com/photo-1584865288642-42078afe6942?auto=format&fit=crop&w=1000&q=90",
-    },
-  },
-
   {
     id: 10,
-    name: "Signature Knit Cardigan",
-    category: "Women",
-    price: 99,
-    colors: ["Cream", "Brown", "Black"],
-    sizes: ["XS", "S", "M", "L", "XL"],
-    image:
-      "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&w=1000&q=90",
-    colorImages: {
-      Cream:
-        "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&w=1000&q=90",
-      Brown:
-        "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=1000&q=90",
-      Black:
-        "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?auto=format&fit=crop&w=1000&q=90",
-    },
+    name: "Premium Cotton Polo",
+    price: 59,
+    category: "Men",
+    type: "T-Shirts",
+    badge: "ESSENTIAL",
+    description:
+      "A polished cotton polo with a refined structure that works equally well dressed up or down.",
+    colors: [
+      { name: "Cream", hex: "#e8dfcf" },
+      { name: "Navy", hex: "#273447" },
+      { name: "Black", hex: "#181818" },
+    ],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    images: [
+      "https://images.unsplash.com/photo-1625910513413-5fc45f2e9b2b?auto=format&fit=crop&w=1200&q=85",
+      "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?auto=format&fit=crop&w=1200&q=85",
+    ],
   },
-
   {
     id: 11,
-    name: "Premium Knit Sweater",
+    name: "Modern Utility Jacket",
+    price: 139,
     category: "Unisex",
-    price: 95,
-    colors: ["Cream", "Charcoal", "Brown"],
-    sizes: ["S", "M", "L", "XL"],
-    image:
-      "https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=1000&q=90",
-    colorImages: {
-      Cream:
-        "https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=1000&q=90",
-      Charcoal:
-        "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1000&q=90",
-      Brown:
-        "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=1000&q=90",
-    },
+    type: "Outerwear",
+    badge: "LIMITED",
+    description:
+      "A modern utility layer with architectural pockets and an understated premium finish.",
+    colors: [
+      { name: "Sand", hex: "#b8a991" },
+      { name: "Olive", hex: "#666951" },
+      { name: "Black", hex: "#181818" },
+    ],
+    sizes: ["XS", "S", "M", "L", "XL"],
+    images: [
+      "https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?auto=format&fit=crop&w=1200&q=85",
+      "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=1200&q=85",
+    ],
   },
-
   {
     id: 12,
-    name: "Straight-Leg Denim",
+    name: "Signature Minimal Sneaker",
+    price: 119,
     category: "Unisex",
-    price: 89,
-    colors: ["Indigo", "Washed Black"],
-    sizes: ["28", "30", "32", "34", "36"],
-    image:
-      "https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=1000&q=90",
-    colorImages: {
-      Indigo:
-        "https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=1000&q=90",
-      "Washed Black":
-        "https://images.unsplash.com/photo-1602293589930-45aad59ba3ab?auto=format&fit=crop&w=1000&q=90",
-    },
+    type: "Footwear",
+    badge: "SIGNATURE",
+    description:
+      "A minimal everyday sneaker designed around clean proportions and versatile styling.",
+    colors: [
+      { name: "Off White", hex: "#e8e5dc" },
+      { name: "Black", hex: "#191919" },
+      { name: "Stone", hex: "#a49b8b" },
+    ],
+    sizes: ["39", "40", "41", "42", "43", "44", "45"],
+    images: [
+      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1200&q=85",
+      "https://images.unsplash.com/photo-1552346154-21d32810aba3?auto=format&fit=crop&w=1200&q=85",
+    ],
   },
 ];
 
-/* =====================================================
-   JOURNAL
-   ===================================================== */
+const CATEGORIES = ["All", "Men", "Women", "Unisex"];
 
-const stories = [
+const STORIES = [
   {
     id: 1,
-    tag: "STYLE GUIDE",
-    title: "The New Definition of Everyday Style",
-    text:
-      "Discover simple ways to build a refined wardrobe that feels modern without following every trend.",
+    title: "The Art of Everyday",
+    text: "Why the pieces you wear most should also be the pieces you love most.",
     image:
-      "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=90",
+      "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1200&q=85",
   },
   {
     id: 2,
-    tag: "SS PASSION",
-    title: "Building a Timeless Wardrobe",
-    text:
-      "A thoughtful wardrobe starts with versatile pieces that work together season after season.",
+    title: "Designed Without Noise",
+    text: "A closer look at our approach to modern, timeless fashion.",
     image:
-      "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1200&q=90",
+      "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1200&q=85",
   },
   {
     id: 3,
-    tag: "THE EDIT",
-    title: "Modern Fashion Without Limits",
-    text:
-      "Explore the SS PASSION approach to effortless silhouettes, confident details and personal style.",
+    title: "A New Everyday",
+    text: "Building a wardrobe around pieces that work beyond a single season.",
     image:
-      "https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=1200&q=90",
+      "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1200&q=85",
   },
 ];
 
-/* =====================================================
-   APP
-   ===================================================== */
+/* =========================================================
+   GLOBAL STYLES
+   Everything needed by the application lives here.
+   ========================================================= */
 
-function App() {
-  const [category, setCategory] = useState("All");
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [search, setSearch] = useState("");
+const GLOBAL_CSS = `
+  * {
+    box-sizing: border-box;
+  }
 
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [selectedStory, setSelectedStory] = useState(null);
+  html {
+    scroll-behavior: smooth;
+  }
 
-  const [selectedSize, setSelectedSize] = useState("");
-  const [selectedColor, setSelectedColor] = useState("");
+  body {
+    margin: 0;
+    background: #f7f4ee;
+    color: #1c1b19;
+    font-family: Arial, Helvetica, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
 
-  const [cart, setCart] = useState([]);
-  const [wishlist, setWishlist] = useState([]);
+  button,
+  input,
+  select {
+    font: inherit;
+  }
 
-  const [cartOpen, setCartOpen] = useState(false);
-  const [wishlistOpen, setWishlistOpen] = useState(false);
+  button {
+    cursor: pointer;
+  }
 
-  /* =====================================================
-     SCROLL
-     ===================================================== */
+  img {
+    display: block;
+    max-width: 100%;
+  }
 
-  const scrollTo = (id) => {
-    const element = document.getElementById(id);
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 
-    if (element) {
-      element.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
+  ::selection {
+    background: #1c1b19;
+    color: #f7f4ee;
+  }
+
+  .ss-app {
+    min-height: 100vh;
+    overflow-x: hidden;
+    background: #f7f4ee;
+  }
+
+  .ss-announcement {
+    background: #1d1c1a;
+    color: #f7f4ee;
+    text-align: center;
+    padding: 9px 18px;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .ss-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(247, 244, 238, 0.94);
+    border-bottom: 1px solid rgba(28, 27, 25, 0.10);
+    backdrop-filter: blur(16px);
+  }
+
+  .ss-nav {
+    width: min(1400px, calc(100% - 48px));
+    min-height: 78px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+  }
+
+  .ss-logo {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 25px;
+    letter-spacing: 4px;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+
+  .ss-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    font-size: 11px;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+  }
+
+  .ss-nav-links button {
+    border: 0;
+    background: transparent;
+    color: #1c1b19;
+    padding: 10px 0;
+  }
+
+  .ss-nav-links button:hover {
+    opacity: .55;
+  }
+
+  .ss-nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .ss-icon-btn {
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(28, 27, 25, .15);
+    border-radius: 50%;
+    background: transparent;
+    color: #1c1b19;
+    display: grid;
+    place-items: center;
+    font-size: 15px;
+    transition: .2s ease;
+  }
+
+  .ss-icon-btn:hover {
+    background: #1c1b19;
+    color: #f7f4ee;
+  }
+
+  .ss-bag-wrap {
+    position: relative;
+  }
+
+  .ss-bag-count {
+    position: absolute;
+    right: -3px;
+    top: -4px;
+    min-width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    background: #1c1b19;
+    color: #fff;
+    font-size: 9px;
+    display: grid;
+    place-items: center;
+    border: 2px solid #f7f4ee;
+  }
+
+  .ss-mobile-menu {
+    display: none;
+  }
+
+  .ss-hero {
+    min-height: 720px;
+    position: relative;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background:
+      linear-gradient(90deg, rgba(15,15,14,.58), rgba(15,15,14,.08)),
+      url("https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=2200&q=90")
+      center / cover;
+  }
+
+  .ss-hero-content {
+    width: min(1400px, calc(100% - 48px));
+    margin: auto;
+    color: white;
+    padding: 110px 0;
+  }
+
+  .ss-eyebrow {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+
+  .ss-hero-title {
+    max-width: 760px;
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(54px, 8vw, 110px);
+    line-height: .91;
+    font-weight: 400;
+    letter-spacing: -4px;
+  }
+
+  .ss-hero-copy {
+    max-width: 500px;
+    margin: 28px 0 35px;
+    line-height: 1.8;
+    font-size: 15px;
+    color: rgba(255,255,255,.85);
+  }
+
+  .ss-primary-btn {
+    border: 1px solid #1c1b19;
+    background: #1c1b19;
+    color: #fff;
+    padding: 15px 24px;
+    min-height: 48px;
+    font-size: 10px;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    transition: .2s ease;
+  }
+
+  .ss-primary-btn:hover {
+    background: transparent;
+    color: #1c1b19;
+  }
+
+  .ss-hero .ss-primary-btn {
+    background: #f7f4ee;
+    color: #1c1b19;
+    border-color: #f7f4ee;
+  }
+
+  .ss-hero .ss-primary-btn:hover {
+    background: transparent;
+    color: #fff;
+  }
+
+  .ss-section {
+    width: min(1400px, calc(100% - 48px));
+    margin: auto;
+    padding: 110px 0;
+  }
+
+  .ss-section-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 45px;
+  }
+
+  .ss-section-kicker {
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    opacity: .55;
+  }
+
+  .ss-section-title {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(38px, 5vw, 65px);
+    line-height: .98;
+    font-weight: 400;
+    letter-spacing: -2px;
+  }
+
+  .ss-section-description {
+    max-width: 430px;
+    line-height: 1.8;
+    color: #69665f;
+    font-size: 14px;
+  }
+
+  .ss-filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 35px;
+  }
+
+  .ss-filter-btn {
+    border: 1px solid rgba(28,27,25,.16);
+    background: transparent;
+    padding: 11px 18px;
+    font-size: 10px;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+  }
+
+  .ss-filter-btn.active,
+  .ss-filter-btn:hover {
+    background: #1c1b19;
+    color: white;
+    border-color: #1c1b19;
+  }
+
+  .ss-product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 22px;
+  }
+
+  .ss-product-card {
+    min-width: 0;
+  }
+
+  .ss-product-image-wrap {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background: #e9e4da;
+    cursor: pointer;
+  }
+
+  .ss-product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .65s ease;
+  }
+
+  .ss-product-image-wrap:hover .ss-product-image {
+    transform: scale(1.035);
+  }
+
+  .ss-product-badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: rgba(247,244,238,.93);
+    padding: 7px 9px;
+    font-size: 8px;
+    letter-spacing: 1.4px;
+  }
+
+  .ss-wish-small {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 38px;
+    height: 38px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(247,244,238,.93);
+    color: #1c1b19;
+    font-size: 17px;
+  }
+
+  .ss-product-info {
+    padding: 17px 2px 5px;
+  }
+
+  .ss-product-category {
+    font-size: 9px;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    opacity: .48;
+  }
+
+  .ss-product-name {
+    margin: 8px 0 7px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 19px;
+    font-weight: 400;
+  }
+
+  .ss-product-price {
+    font-size: 13px;
+  }
+
+  .ss-color-row {
+    display: flex;
+    gap: 6px;
+    margin-top: 13px;
+  }
+
+  .ss-color-dot {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,0,0,.16);
+  }
+
+  .ss-story-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+
+  .ss-story-card {
+    cursor: pointer;
+  }
+
+  .ss-story-image {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: #e5dfd3;
+  }
+
+  .ss-story-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .6s ease;
+  }
+
+  .ss-story-card:hover img {
+    transform: scale(1.04);
+  }
+
+  .ss-story-content {
+    padding-top: 20px;
+  }
+
+  .ss-story-title {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 26px;
+    font-weight: 400;
+    margin: 0 0 9px;
+  }
+
+  .ss-story-text {
+    margin: 0;
+    color: #6e6a62;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .ss-editorial {
+    min-height: 600px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: #e6dfd3;
+  }
+
+  .ss-editorial-image {
+    min-height: 600px;
+    background:
+      url("https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?auto=format&fit=crop&w=1600&q=90")
+      center / cover;
+  }
+
+  .ss-editorial-content {
+    padding: 80px clamp(30px, 7vw, 110px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .ss-editorial-title {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(45px, 5vw, 75px);
+    font-weight: 400;
+    line-height: .95;
+    margin: 0 0 25px;
+    letter-spacing: -2px;
+  }
+
+  .ss-editorial-content p {
+    max-width: 460px;
+    line-height: 1.9;
+    color: #615e57;
+    font-size: 14px;
+    margin-bottom: 30px;
+  }
+
+  .ss-trust {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid rgba(28,27,25,.12);
+    border-bottom: 1px solid rgba(28,27,25,.12);
+  }
+
+  .ss-trust-item {
+    padding: 38px 25px;
+    text-align: center;
+    border-right: 1px solid rgba(28,27,25,.12);
+  }
+
+  .ss-trust-item:last-child {
+    border-right: 0;
+  }
+
+  .ss-trust-number {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 28px;
+    margin-bottom: 9px;
+  }
+
+  .ss-trust-label {
+    font-size: 9px;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    opacity: .55;
+  }
+
+  .ss-newsletter {
+    background: #1d1c1a;
+    color: #f7f4ee;
+  }
+
+  .ss-newsletter-inner {
+    width: min(900px, calc(100% - 48px));
+    margin: auto;
+    padding: 110px 0;
+    text-align: center;
+  }
+
+  .ss-newsletter-title {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(40px, 6vw, 72px);
+    font-weight: 400;
+    line-height: 1;
+    margin: 0 0 20px;
+  }
+
+  .ss-newsletter-copy {
+    max-width: 550px;
+    margin: 0 auto 35px;
+    color: rgba(247,244,238,.68);
+    line-height: 1.8;
+    font-size: 14px;
+  }
+
+  .ss-newsletter-form {
+    display: flex;
+    max-width: 560px;
+    margin: auto;
+    border-bottom: 1px solid rgba(247,244,238,.45);
+  }
+
+  .ss-newsletter-input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: white;
+    padding: 15px 0;
+  }
+
+  .ss-newsletter-input::placeholder {
+    color: rgba(247,244,238,.5);
+  }
+
+  .ss-newsletter-submit {
+    border: 0;
+    background: transparent;
+    color: white;
+    padding: 15px 0 15px 20px;
+    font-size: 10px;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+  }
+
+  .ss-footer {
+    background: #f0ece4;
+    padding: 70px 0 25px;
+  }
+
+  .ss-footer-grid {
+    width: min(1400px, calc(100% - 48px));
+    margin: auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 45px;
+  }
+
+  .ss-footer-brand {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 28px;
+    letter-spacing: 4px;
+    margin-bottom: 17px;
+  }
+
+  .ss-footer-copy {
+    max-width: 340px;
+    color: #69665f;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+
+  .ss-footer-title {
+    font-size: 9px;
+    letter-spacing: 1.7px;
+    text-transform: uppercase;
+    margin-bottom: 17px;
+  }
+
+  .ss-footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    color: #69665f;
+    font-size: 12px;
+  }
+
+  .ss-footer-bottom {
+    width: min(1400px, calc(100% - 48px));
+    margin: 65px auto 0;
+    padding-top: 20px;
+    border-top: 1px solid rgba(28,27,25,.12);
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    color: #77736b;
+    font-size: 10px;
+  }
+
+  .ss-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(0,0,0,.48);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .ss-modal {
+    width: min(1100px, 100%);
+    max-height: calc(100vh - 40px);
+    overflow: auto;
+    background: #f7f4ee;
+    position: relative;
+  }
+
+  .ss-modal-close {
+    position: absolute;
+    z-index: 3;
+    top: 14px;
+    right: 14px;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(28,27,25,.15);
+    background: rgba(247,244,238,.92);
+    border-radius: 50%;
+    font-size: 18px;
+  }
+
+  .ss-product-modal {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ss-product-modal-image {
+    min-height: 650px;
+    background: #e7e1d7;
+  }
+
+  .ss-product-modal-image img {
+    width: 100%;
+    height: 100%;
+    min-height: 650px;
+    object-fit: cover;
+  }
+
+  .ss-product-modal-info {
+    padding: 70px 55px;
+  }
+
+  .ss-modal-kicker {
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: .5;
+  }
+
+  .ss-modal-product-title {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 400;
+    font-size: clamp(38px, 4vw, 58px);
+    line-height: .98;
+    margin: 15px 0;
+  }
+
+  .ss-modal-price {
+    font-size: 17px;
+    margin-bottom: 25px;
+  }
+
+  .ss-modal-description {
+    color: #68645d;
+    line-height: 1.8;
+    font-size: 13px;
+    margin-bottom: 35px;
+  }
+
+  .ss-choice-label {
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 11px;
+  }
+
+  .ss-choice-group {
+    margin-bottom: 25px;
+  }
+
+  .ss-choice-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+
+  .ss-choice-btn {
+    min-width: 45px;
+    height: 40px;
+    border: 1px solid rgba(28,27,25,.17);
+    background: transparent;
+    font-size: 10px;
+  }
+
+  .ss-choice-btn.active {
+    background: #1c1b19;
+    color: white;
+    border-color: #1c1b19;
+  }
+
+  .ss-modal-colors {
+    display: flex;
+    gap: 10px;
+  }
+
+  .ss-modal-color {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    outline: 1px solid rgba(28,27,25,.2);
+    outline-offset: 2px;
+  }
+
+  .ss-modal-color.active {
+    outline: 2px solid #1c1b19;
+  }
+
+  .ss-add-btn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 18px;
+    background: #1c1b19;
+    color: white;
+    border: 1px solid #1c1b19;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .ss-add-btn:hover {
+    background: transparent;
+    color: #1c1b19;
+  }
+
+  .ss-cart-panel {
+    margin-left: auto;
+    width: min(500px, 100%);
+    height: 100%;
+    background: #f7f4ee;
+    display: flex;
+    flex-direction: column;
+    animation: ss-slide .25s ease;
+  }
+
+  @keyframes ss-slide {
+    from {
+      transform: translateX(30px);
+      opacity: 0;
     }
-  };
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
 
-  /* =====================================================
-     FILTER
-     ===================================================== */
+  .ss-cart-head {
+    padding: 25px;
+    border-bottom: 1px solid rgba(28,27,25,.12);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
-  const filteredProducts = products.filter((product) => {
-    const categoryMatch =
-      category === "All" ||
-      product.category === category ||
-      product.category === "Unisex";
+  .ss-cart-title {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 28px;
+  }
 
-    const searchMatch = product.name
-      .toLowerCase()
-      .includes(search.toLowerCase());
+  .ss-cart-body {
+    flex: 1;
+    overflow: auto;
+    padding: 20px 25px;
+  }
 
-    return categoryMatch && searchMatch;
-  });
+  .ss-cart-empty {
+    text-align: center;
+    padding: 100px 20px;
+    color: #77736c;
+  }
 
-  /* =====================================================
-     OPEN PRODUCT
-     ===================================================== */
+  .ss-cart-empty-title {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 30px;
+    color: #1c1b19;
+    margin-bottom: 12px;
+  }
 
-  const openProduct = (product) => {
-    const firstColor = product.colors[0];
-    const firstSize = product.sizes[0];
+  .ss-cart-item {
+    display: grid;
+    grid-template-columns: 85px 1fr auto;
+    gap: 14px;
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(28,27,25,.10);
+  }
 
-    setSelectedProduct(product);
-    setSelectedColor(firstColor);
-    setSelectedSize(firstSize);
-  };
+  .ss-cart-item-image {
+    width: 85px;
+    height: 105px;
+    object-fit: cover;
+  }
 
-  /* =====================================================
-     CLOSE PRODUCT
-     ===================================================== */
+  .ss-cart-item-name {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 17px;
+    margin-bottom: 7px;
+  }
 
-  const closeProduct = () => {
-    setSelectedProduct(null);
-    setSelectedColor("");
-    setSelectedSize("");
-  };
+  .ss-cart-item-meta {
+    color: #77736c;
+    font-size: 10px;
+    line-height: 1.8;
+  }
 
-  /* =====================================================
-     GET CURRENT PRODUCT IMAGE
-     
-     THIS IS THE IMPORTANT FIX.
-     
-     The image changes whenever selectedColor changes.
-     ===================================================== */
+  .ss-quantity {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid rgba(28,27,25,.15);
+    margin-top: 12px;
+  }
 
-  const getSelectedProductImage = () => {
-    if (!selectedProduct) return "";
+  .ss-quantity button {
+    width: 28px;
+    height: 28px;
+    border: 0;
+    background: transparent;
+  }
 
-    return (
-      selectedProduct.colorImages?.[selectedColor] ||
-      selectedProduct.image
-    );
-  };
+  .ss-quantity span {
+    width: 28px;
+    text-align: center;
+    font-size: 10px;
+  }
 
-  /* =====================================================
-     ADD TO CART
-     ===================================================== */
+  .ss-remove {
+    border: 0;
+    background: transparent;
+    font-size: 10px;
+    text-decoration: underline;
+    opacity: .55;
+    margin-top: 10px;
+  }
 
-  const addToCart = () => {
-    if (!selectedProduct) return;
+  .ss-cart-item-price {
+    font-size: 12px;
+  }
 
-    if (!selectedColor || !selectedSize) {
-      alert("Please select a colour and size.");
-      return;
+  .ss-cart-footer {
+    border-top: 1px solid rgba(28,27,25,.12);
+    padding: 22px 25px 28px;
+  }
+
+  .ss-shipping-message {
+    background: #ece6da;
+    padding: 13px;
+    font-size: 10px;
+    line-height: 1.6;
+    margin-bottom: 18px;
+  }
+
+  .ss-summary-line {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 12px;
+  }
+
+  .ss-summary-total {
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(28,27,25,.12);
+  }
+
+  .ss-checkout {
+    width: 100%;
+    margin-top: 20px;
+    padding: 17px;
+    border: 0;
+    background: #1c1b19;
+    color: white;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .ss-checkout:disabled {
+    opacity: .4;
+    cursor: not-allowed;
+  }
+
+  .ss-search-box {
+    width: min(650px, 100%);
+    margin: auto;
+    background: #f7f4ee;
+    padding: 45px;
+  }
+
+  .ss-search-title {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 40px;
+    margin-bottom: 25px;
+  }
+
+  .ss-search-input {
+    width: 100%;
+    border: 0;
+    border-bottom: 1px solid rgba(28,27,25,.3);
+    background: transparent;
+    padding: 15px 0;
+    outline: 0;
+    font-size: 18px;
+  }
+
+  .ss-story-modal {
+    width: min(900px, 100%);
+    background: #f7f4ee;
+  }
+
+  .ss-story-modal-image {
+    width: 100%;
+    height: 380px;
+    object-fit: cover;
+  }
+
+  .ss-story-modal-content {
+    padding: 45px;
+  }
+
+  .ss-story-modal-content h2 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 42px;
+    font-weight: 400;
+    margin: 0 0 18px;
+  }
+
+  .ss-story-modal-content p {
+    max-width: 650px;
+    color: #68645d;
+    line-height: 1.9;
+    font-size: 14px;
+  }
+
+  .ss-toast {
+    position: fixed;
+    z-index: 200;
+    left: 50%;
+    bottom: 25px;
+    transform: translateX(-50%);
+    background: #1c1b19;
+    color: white;
+    padding: 13px 20px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.18);
+  }
+
+  @media (max-width: 1000px) {
+    .ss-product-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
-    const selectedImage = getSelectedProductImage();
+    .ss-nav-links {
+      gap: 17px;
+    }
 
-    const cartId =
-      selectedProduct.id +
-      "-" +
-      selectedSize +
-      "-" +
-      selectedColor;
+    .ss-editorial {
+      grid-template-columns: 1fr;
+    }
 
-    setCart((current) => {
-      const existing = current.find(
-        (item) => item.cartId === cartId
-      );
+    .ss-editorial-image {
+      min-height: 500px;
+    }
 
-      if (existing) {
-        return current.map((item) =>
-          item.cartId === cartId
-            ? {
-                ...item,
-                quantity: item.quantity + 1,
-              }
-            : item
-        );
-      }
+    .ss-footer-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
 
-      return [
-        ...current,
-        {
-          ...selectedProduct,
+  @media (max-width: 760px) {
+    .ss-announcement {
+      font-size: 8px;
+      letter-spacing: 1.4px;
+    }
 
-          /* Save selected variant */
-          size: selectedSize,
-          color: selectedColor,
+    .ss-nav {
+      width: min(100% - 28px, 1400px);
+      min-height: 65px;
+    }
 
-          /* Save the selected colour image */
-          image: selectedImage,
+    .ss-logo {
+      font-size: 21px;
+    }
 
-          cartId,
-          quantity: 1,
-        },
-      ];
-    });
+    .ss-nav-links {
+      display: none;
+    }
 
-    closeProduct();
-    setCartOpen(true);
-  };
+    .ss-mobile-menu {
+      display: grid;
+    }
 
-  /* =====================================================
-     QUANTITY
-     ===================================================== */
+    .ss-nav-actions {
+      gap: 5px;
+    }
 
-  const updateQuantity = (cartId, change) => {
-    setCart((current) =>
-      current
-        .map((item) =>
-          item.cartId === cartId
-            ? {
-                ...item,
-                quantity: item.quantity + change,
-              }
-            : item
-        )
-        .filter((item) => item.quantity > 0)
-    );
-  };
+    .ss-icon-btn {
+      width: 36px;
+      height: 36px;
+    }
 
-  /* =====================================================
-     REMOVE CART
-     ===================================================== */
+    .ss-hero {
+      min-height: 650px;
+    }
 
-  const removeFromCart = (cartId) => {
-    setCart((current) =>
-      current.filter((item) => item.cartId !== cartId)
-    );
-  };
+    .ss-hero-content,
+    .ss-section {
+      width: min(100% - 28px, 1400px);
+    }
 
-  /* =====================================================
-     WISHLIST
-     ===================================================== */
+    .ss-hero-title {
+      letter-spacing: -2px;
+    }
 
-  const toggleWishlist = (id) => {
-    setWishlist((current) =>
-      current.includes(id)
-        ? current.filter((item) => item !== id)
-        : [...current, id]
-    );
-  };
+    .ss-section {
+      padding: 75px 0;
+    }
 
-  /* =====================================================
-     TOTALS
-     ===================================================== */
+    .ss-section-head {
+      display: block;
+      margin-bottom: 30px;
+    }
 
-  const totalItems = cart.reduce(
-    (sum, item) => sum + item.quantity,
-    0
-  );
+    .ss-section-description {
+      margin-top: 20px;
+    }
 
-  const total = cart.reduce(
-    (sum, item) =>
-      sum + item.price * item.quantity,
-    0
-  );
+    .ss-product-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px 10px;
+    }
 
-  const wishlistProducts = products.filter(
-    (product) => wishlist.includes(product.id)
-  );
+    .ss-product-name {
+      font-size: 16px;
+    }
 
-  /* =====================================================
-     RENDER
-     ===================================================== */
+    .ss-story-grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
 
+    .ss-trust {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .ss-trust-item:nth-child(2) {
+      border-right: 0;
+    }
+
+    .ss-trust-item {
+      border-bottom: 1px solid rgba(28,27,25,.12);
+    }
+
+    .ss-trust-item:nth-child(3),
+    .ss-trust-item:nth-child(4) {
+      border-bottom: 0;
+    }
+
+    .ss-footer-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 35px 20px;
+    }
+
+    .ss-footer-brand-area {
+      grid-column: 1 / -1;
+    }
+
+    .ss-footer-bottom {
+      display: block;
+      line-height: 1.8;
+    }
+
+    .ss-footer-bottom span {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .ss-product-modal {
+      grid-template-columns: 1fr;
+    }
+
+    .ss-product-modal-image {
+      min-height: 420px;
+    }
+
+    .ss-product-modal-image img {
+      min-height: 420px;
+    }
+
+    .ss-product-modal-info {
+      padding: 40px 25px 30px;
+    }
+
+    .ss-modal-product-title {
+      font-size: 42px;
+    }
+
+    .ss-overlay {
+      padding: 0;
+    }
+
+    .ss-modal {
+      max-height: 100vh;
+      height: 100%;
+    }
+
+    .ss-cart-panel {
+      width: 100%;
+    }
+
+    .ss-search-box {
+      padding: 30px 22px;
+    }
+
+    .ss-story-modal-image {
+      height: 280px;
+    }
+
+    .ss-story-modal-content {
+      padding: 30px 22px;
+    }
+
+    .ss-newsletter-inner {
+      width: min(100% - 28px, 900px);
+      padding: 80px 0;
+    }
+  }
+
+  @media (max-width: 430px) {
+    .ss-product-grid {
+      gap: 22px 9px;
+    }
+
+    .ss-product-badge {
+      top: 8px;
+      left: 8px;
+      font-size: 7px;
+    }
+
+    .ss-wish-small {
+      top: 7px;
+      right: 7px;
+      width: 32px;
+      height: 32px;
+    }
+
+    .ss-product-info {
+      padding-top: 12px;
+    }
+
+    .ss-color-row {
+      margin-top: 9px;
+    }
+  }
+`;
+
+/* =========================================================
+   SMALL REUSABLE COMPONENTS
+   ========================================================= */
+
+function IconButton({ label, onClick, children, className = "" }) {
   return (
-    <div className="app">
-
-      {/* ANNOUNCEMENT */}
-
-      <div className="announcement">
-        FREE INTERNATIONAL SHIPPING ON ORDERS OVER $150
-      </div>
-
-      {/* HEADER */}
-
-      <header className="header">
-
-        <button
-          className="mobile-menu"
-          type="button"
-          onClick={() => scrollTo("collections")}
-        >
-          ☰
-        </button>
-
-        <button
-          className="logo"
-          type="button"
-          onClick={() =>
-            window.scrollTo({
-              top: 0,
-              behavior: "smooth",
-            })
-          }
-        >
-          <span className="logo-mark">
-            SS
-          </span>
-
-          <span>
-            PASSION
-          </span>
-        </button>
-
-        <nav className="nav">
-
-          <button
-            type="button"
-            onClick={() => {
-              setCategory("Men");
-              scrollTo("collections");
-            }}
-          >
-            MEN
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              setCategory("Women");
-              scrollTo("collections");
-            }}
-          >
-            WOMEN
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              setCategory("All");
-              scrollTo("collections");
-            }}
-          >
-            NEW ARRIVALS
-          </button>
-
-          <button
-            type="button"
-            onClick={() =>
-              scrollTo("collections")
-            }
-          >
-            COLLECTIONS
-          </button>
-
-          <button
-            type="button"
-            onClick={() =>
-              scrollTo("journal")
-            }
-          >
-            JOURNAL
-          </button>
-
-        </nav>
-
-        <div className="header-actions">
-
-          <button
-            type="button"
-            onClick={() =>
-              setSearchOpen(!searchOpen)
-            }
-            aria-label="Search"
-          >
-            ⌕
-          </button>
-
-          <button
-            type="button"
-            onClick={() =>
-              setWishlistOpen(true)
-            }
-            aria-label="Wishlist"
-          >
-            {wishlist.length > 0
-              ? "♥"
-              : "♡"}
-          </button>
-
-          <button
-            type="button"
-            onClick={() =>
-              setCartOpen(true)
-            }
-          >
-            BAG ({totalItems})
-          </button>
-
-        </div>
-
-      </header>
-
-      {/* SEARCH */}
-
-      {searchOpen && (
-        <div className="search-panel">
-
-          <input
-            autoFocus
-            type="search"
-            value={search}
-            onChange={(event) =>
-              setSearch(event.target.value)
-            }
-            onKeyDown={(event) => {
-              if (event.key === "Enter") {
-                setSearchOpen(false);
-                scrollTo("collections");
-              }
-            }}
-            placeholder="Search products..."
-          />
-
-          <button
-            type="button"
-            onClick={() => {
-              setSearch("");
-              setSearchOpen(false);
-            }}
-          >
-            ×
-          </button>
-
-        </div>
-      )}
-
-      {/* HERO */}
-
-      <section className="hero">
-
-        <div className="hero-overlay"></div>
-
-        <div className="hero-content">
-
-          <p className="eyebrow">
-            SS PASSION — NEW SEASON
-          </p>
-
-          <h1>
-            WEAR YOUR
-            <br />
-            PASSION.
-          </h1>
-
-          <p className="hero-subtitle">
-            Timeless pieces. Modern attitude.
-          </p>
-
-          <div className="hero-buttons">
-
-            <button
-              className="primary-button"
-              type="button"
-              onClick={() => {
-                setCategory("Men");
-                scrollTo("collections");
-              }}
-            >
-              SHOP MEN
-            </button>
-
-            <button
-              className="secondary-button"
-              type="button"
-              onClick={() => {
-                setCategory("Women");
-                scrollTo("collections");
-              }}
-            >
-              SHOP WOMEN
-            </button>
-
-          </div>
-
-        </div>
-
-      </section>
-
-      {/* INTRO */}
-
-      <section className="intro">
-
-        <p className="eyebrow">
-          THE SS PASSION EDIT
-        </p>
-
-        <h2>
-          Modern fashion
-          <br />
-          with timeless appeal.
-        </h2>
-
-        <p className="intro-text">
-          Thoughtfully designed essentials for
-          modern life, created to move across
-          seasons and generations.
-        </p>
-
-      </section>
-
-      {/* COLLECTION */}
-
-      <section
-        className="collection-section"
-        id="collections"
-      >
-
-        <div className="section-heading">
-
-          <div>
-
-            <p className="eyebrow">
-              DISCOVER
-            </p>
-
-            <h2>
-              {search
-                ? `Search: ${search}`
-                : category === "All"
-                ? "New Arrivals"
-                : category}
-            </h2>
-
-          </div>
-
-          <div className="category-buttons">
-
-            <button
-              type="button"
-              className={
-                category === "All"
-                  ? "active"
-                  : ""
-              }
-              onClick={() =>
-                setCategory("All")
-              }
-            >
-              ALL
-            </button>
-
-            <button
-              type="button"
-              className={
-                category === "Men"
-                  ? "active"
-                  : ""
-              }
-              onClick={() =>
-                setCategory("Men")
-              }
-            >
-              MEN
-            </button>
-
-            <button
-              type="button"
-              className={
-                category === "Women"
-                  ? "active"
-                  : ""
-              }
-              onClick={() =>
-                setCategory("Women")
-              }
-            >
-              WOMEN
-            </button>
-
-          </div>
-
-        </div>
-
-        <div className="products">
-
-          {filteredProducts.length === 0 ? (
-
-            <div className="empty-search">
-
-              <h3>
-                No products found.
-              </h3>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setSearch("");
-                  setCategory("All");
-                }}
-              >
-                VIEW ALL PRODUCTS
-              </button>
-
-            </div>
-
-          ) : (
-
-            filteredProducts.map(
-              (product) => (
-
-                <article
-                  className="product"
-                  key={product.id}
-                >
-
-                  <div
-                    className="product-image-wrap"
-                    onClick={() =>
-                      openProduct(product)
-                    }
-                  >
-
-                    <img
-                      className="product-image"
-                      src={product.image}
-                      alt={product.name}
-                    />
-
-                    <span className="new-badge">
-                      NEW
-                    </span>
-
-                    <button
-                      className="wishlist"
-                      type="button"
-                      aria-label="Add to wishlist"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        toggleWishlist(
-                          product.id
-                        );
-                      }}
-                    >
-                      {wishlist.includes(
-                        product.id
-                      )
-                        ? "♥"
-                        : "♡"}
-                    </button>
-
-                    <button
-                      className="quick-add"
-                      type="button"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        openProduct(product);
-                      }}
-                    >
-                      QUICK VIEW
-                    </button>
-
-                  </div>
-
-                  <div className="product-info">
-
-                    <div>
-
-                      <p className="product-category">
-                        {product.category}
-                      </p>
-
-                      <h3>
-                        {product.name}
-                      </h3>
-
-                    </div>
-
-                    <p className="product-price">
-                      ${product.price}.00
-                    </p>
-
-                  </div>
-
-                </article>
-
-              )
-            )
-
-          )}
-
-        </div>
-
-      </section>
-
-      {/* EDITORIAL */}
-
-      <section className="editorial">
-
-        <div className="editorial-image"></div>
-
-        <div className="editorial-content">
-
-          <p className="eyebrow">
-            THE COLLECTION
-          </p>
-
-          <h2>
-            Made for
-            <br />
-            every day.
-          </h2>
-
-          <p>
-            Refined silhouettes, considered
-            fabrics and effortless pieces designed
-            to become part of your everyday
-            wardrobe.
-          </p>
-
-          <button
-            className="text-link"
-            type="button"
-            onClick={() => {
-              setCategory("All");
-              scrollTo("collections");
-            }}
-          >
-            EXPLORE COLLECTIONS →
-          </button>
-
-        </div>
-
-      </section>
-
-      {/* STORY */}
-
-      <section
-        className="story"
-        id="story"
-      >
-
-        <div className="story-content">
-
-          <p className="eyebrow">
-            OUR PHILOSOPHY
-          </p>
-
-          <h2>
-            Style should
-            <br />
-            feel like you.
-          </h2>
-
-          <p>
-            SS PASSION exists for modern
-            individuals who want fashion to feel
-            personal, effortless and timeless.
-          </p>
-
-          <p>
-            We create pieces designed to move
-            with you through different moments,
-            seasons and generations.
-          </p>
-
-        </div>
-
-      </section>
-
-      {/* TRUST */}
-
-      <section className="trust">
-
-        <div>
-          <strong>
-            WORLDWIDE SHIPPING
-          </strong>
-          <span>
-            Delivered internationally
-          </span>
-        </div>
-
-        <div>
-          <strong>
-            SECURE PAYMENTS
-          </strong>
-          <span>
-            Safe & protected checkout
-          </span>
-        </div>
-
-        <div>
-          <strong>
-            EASY RETURNS
-          </strong>
-          <span>
-            Simple return experience
-          </span>
-        </div>
-
-        <div>
-          <strong>
-            CUSTOMER SUPPORT
-          </strong>
-          <span>
-            We're here to help
-          </span>
-        </div>
-
-      </section>
-
-      {/* JOURNAL */}
-
-      <section
-        className="journal"
-        id="journal"
-      >
-
-        <div className="section-heading">
-
-          <div>
-
-            <p className="eyebrow">
-              FROM THE JOURNAL
-            </p>
-
-            <h2>
-              Stories & Style
-            </h2>
-
-          </div>
-
-          <button
-            className="journal-link"
-            type="button"
-            onClick={() =>
-              scrollTo("journal")
-            }
-          >
-            EXPLORE →
-          </button>
-
-        </div>
-
-        <div className="journal-grid">
-
-          {stories.map((story) => (
-
-            <article
-              key={story.id}
-              onClick={() =>
-                setSelectedStory(story)
-              }
-              role="button"
-              tabIndex={0}
-              onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  setSelectedStory(story);
-                }
-              }}
-            >
-
-              <div
-                className="journal-image"
-                style={{
-                  backgroundImage:
-                    `url("${story.image}")`,
-                }}
-              ></div>
-
-              <p>
-                {story.tag}
-              </p>
-
-              <h3>
-                {story.title}
-              </h3>
-
-              <span className="read-story">
-                READ STORY →
-              </span>
-
-            </article>
-
-          ))}
-
-        </div>
-
-      </section>
-
-      {/* NEWSLETTER */}
-
-      <section className="newsletter">
-
-        <p className="eyebrow">
-          JOIN SS PASSION
-        </p>
-
-        <h2>
-          Be the first to discover
-          <br />
-          new drops & stories.
-        </h2>
-
-        <form
-          className="newsletter-form"
-          onSubmit={(event) => {
-            event.preventDefault();
-
-            alert(
-              "Welcome to SS PASSION."
-            );
-          }}
-        >
-
-          <input
-            type="email"
-            required
-            placeholder="Your email address"
-          />
-
-          <button type="submit">
-            JOIN
-          </button>
-
-        </form>
-
-      </section>
-
-      {/* FOOTER */}
-
-      <footer>
-
-        <div className="footer-brand">
-
-          <div className="footer-logo">
-
-            <span>
-              SS
-            </span>
-
-            PASSION
-
-          </div>
-
-          <p>
-            Modern fashion with timeless appeal.
-          </p>
-
-        </div>
-
-        <div>
-
-          <h4>
-            SHOP
-          </h4>
-
-          <button
-            type="button"
-            onClick={() => {
-              setCategory("Men");
-              scrollTo("collections");
-            }}
-          >
-            Men
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              setCategory("Women");
-              scrollTo("collections");
-            }}
-          >
-            Women
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              setCategory("All");
-              scrollTo("collections");
-            }}
-          >
-            New Arrivals
-          </button>
-
-          <button
-            type="button"
-            onClick={() =>
-              scrollTo("collections")
-            }
-          >
-            Collections
-          </button>
-
-        </div>
-
-        <div>
-
-          <h4>
-            HELP
-          </h4>
-
-          <button
-            type="button"
-            onClick={() =>
-              alert(
-                "Shipping information will be available at checkout."
-              )
-            }
-          >
-            Shipping
-          </button>
-
-          <button
-            type="button"
-            onClick={() =>
-              alert(
-                "Our return policy will be available soon."
-              )
-            }
-          >
-            Returns
-          </button>
-
-          <button
-            type="button"
-            onClick={() =>
-              alert(
-                "Size guide coming soon."
-              )
-            }
-          >
-            Size Guide
-          </button>
-
-          <button
-            type="button"
-            onClick={() =>
-              alert("FAQ coming soon.")
-            }
-          >
-            FAQ
-          </button>
-
-        </div>
-
-        <div>
-
-          <h4>
-            ABOUT
-          </h4>
-
-          <button
-            type="button"
-            onClick={() =>
-              scrollTo("story")
-            }
-          >
-            Our Story
-          </button>
-
-          <button
-            type="button"
-            onClick={() =>
-              scrollTo("journal")
-            }
-          >
-            Journal
-          </button>
-
-          <button
-            type="button"
-            onClick={() =>
-              alert(
-                "Privacy policy will be published before launch."
-              )
-            }
-          >
-            Privacy
-          </button>
-
-          <button
-            type="button"
-            onClick={() =>
-              alert(
-                "Terms & conditions will be published before launch."
-              )
-            }
-          >
-            Terms
-          </button>
-
-        </div>
-
-      </footer>
-
-      {/* COPYRIGHT */}
-
-      <div className="copyright">
-        © 2026 SS PASSION. ALL RIGHTS RESERVED.
-      </div>
-
-      {/* =====================================================
-          PRODUCT MODAL
-          ===================================================== */}
-
-      {selectedProduct && (
-
-        <div
-          className="modal-backdrop"
-          onClick={closeProduct}
-        >
-
-          <div
-            className="product-modal"
-            onClick={(event) =>
-              event.stopPropagation()
-            }
-          >
-
-            <button
-              className="close-modal"
-              type="button"
-              onClick={closeProduct}
-            >
-              ×
-            </button>
-
-            {/* PRODUCT IMAGE */}
-
-            <div className="modal-image">
-
-              <img
-                src={getSelectedProductImage()}
-                alt={`${selectedProduct.name} - ${selectedColor}`}
-              />
-
-            </div>
-
-            {/* PRODUCT INFO */}
-
-            <div className="modal-info">
-
-              <p className="eyebrow">
-                SS PASSION
-              </p>
-
-              <h2>
-                {selectedProduct.name}
-              </h2>
-
-              <p className="modal-price">
-                ${selectedProduct.price}.00
-              </p>
-
-              {/* COLOUR */}
-
-              <div className="selector">
-
-                <strong>
-                  COLOUR — {selectedColor}
-                </strong>
-
-                <div className="options">
-
-                  {selectedProduct.colors.map(
-                    (color) => (
-
-                      <button
-                        key={color}
-                        type="button"
-                        className={
-                          selectedColor === color
-                            ? "selected"
-                            : ""
-                        }
-                        onClick={() =>
-                          setSelectedColor(color)
-                        }
-                      >
-                        {color}
-                      </button>
-
-                    )
-                  )}
-
-                </div>
-
-              </div>
-
-              {/* SIZE */}
-
-              <div className="selector">
-
-                <strong>
-                  SIZE — {selectedSize}
-                </strong>
-
-                <div className="options">
-
-                  {selectedProduct.sizes.map(
-                    (size) => (
-
-                      <button
-                        key={size}
-                        type="button"
-                        className={
-                          selectedSize === size
-                            ? "selected"
-                            : ""
-                        }
-                        onClick={() =>
-                          setSelectedSize(size)
-                        }
-                      >
-                        {size}
-                      </button>
-
-                    )
-                  )}
-
-                </div>
-
-              </div>
-
-              {/* ADD TO BAG */}
-
-              <button
-                className="add-to-bag"
-                type="button"
-                onClick={addToCart}
-              >
-                ADD TO BAG — $
-                {selectedProduct.price}.00
-              </button>
-
-              <p className="delivery">
-                Worldwide shipping available.
-                Free international shipping on
-                orders over $150.
-              </p>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      )}
-
-      {/* =====================================================
-          STORY MODAL
-          ===================================================== */}
-
-      {selectedStory && (
-
-        <div
-          className="modal-backdrop"
-          onClick={() =>
-            setSelectedStory(null)
-          }
-        >
-
-          <div
-            className="story-modal"
-            onClick={(event) =>
-              event.stopPropagation()
-            }
-          >
-
-            <button
-              className="close-modal"
-              type="button"
-              onClick={() =>
-                setSelectedStory(null)
-              }
-            >
-              ×
-            </button>
-
-            <img
-              src={selectedStory.image}
-              alt={selectedStory.title}
-            />
-
-            <div className="story-modal-content">
-
-              <p className="eyebrow">
-                {selectedStory.tag}
-              </p>
-
-              <h2>
-                {selectedStory.title}
-              </h2>
-
-              <p>
-                {selectedStory.text}
-              </p>
-
-              <button
-                className="primary-button"
-                type="button"
-                onClick={() => {
-                  setSelectedStory(null);
-                  setCategory("All");
-                  scrollTo("collections");
-                }}
-              >
-                SHOP THE EDIT
-              </button>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      )}
-
-      {/* =====================================================
-          WISHLIST
-          ===================================================== */}
-
-      {wishlistOpen && (
-
-        <div
-          className="cart-backdrop"
-          onClick={() =>
-            setWishlistOpen(false)
-          }
-        >
-
-          <aside
-            className="cart"
-            onClick={(event) =>
-              event.stopPropagation()
-            }
-          >
-
-            <div className="cart-header">
-
-              <h2>
-                SAVED ITEMS
-              </h2>
-
-              <button
-                type="button"
-                onClick={() =>
-                  setWishlistOpen(false)
-                }
-              >
-                ×
-              </button>
-
-            </div>
-
-            {wishlistProducts.length === 0 ? (
-
-              <div className="empty-cart">
-
-                <p>
-                  No saved items yet.
-                </p>
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    setWishlistOpen(false)
-                  }
-                >
-                  CONTINUE SHOPPING
-                </button>
-
-              </div>
-
-            ) : (
-
-              <div className="cart-items">
-
-                {wishlistProducts.map(
-                  (product) => (
-
-                    <div
-                      className="cart-item"
-                      key={product.id}
-                    >
-
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                      />
-
-                      <div>
-
-                        <h3>
-                          {product.name}
-                        </h3>
-
-                        <strong>
-                          ${product.price}.00
-                        </strong>
-
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setWishlistOpen(false);
-                            openProduct(product);
-                          }}
-                        >
-                          VIEW PRODUCT
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() =>
-                            toggleWishlist(
-                              product.id
-                            )
-                          }
-                        >
-                          REMOVE
-                        </button>
-
-                      </div>
-
-                    </div>
-
-                  )
-                )}
-
-              </div>
-
-            )}
-
-          </aside>
-
-        </div>
-
-      )}
-
-      {/* =====================================================
-          CART
-          ===================================================== */}
-
-      {cartOpen && (
-
-        <div
-          className="cart-backdrop"
-          onClick={() =>
-            setCartOpen(false)
-          }
-        >
-
-          <aside
-            className="cart"
-            onClick={(event) =>
-              event.stopPropagation()
-            }
-          >
-
-            <div className="cart-header">
-
-              <h2>
-                YOUR BAG
-              </h2>
-
-              <button
-                type="button"
-                onClick={() =>
-                  setCartOpen(false)
-                }
-              >
-                ×
-              </button>
-
-            </div>
-
-            {cart.length === 0 ? (
-
-              <div className="empty-cart">
-
-                <p>
-                  Your bag is currently empty.
-                </p>
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    setCartOpen(false)
-                  }
-                >
-                  CONTINUE SHOPPING
-                </button>
-
-              </div>
-
-            ) : (
-
-              <>
-
-                <div className="cart-items">
-
-                  {cart.map((item) => (
-
-                    <div
-                      className="cart-item"
-                      key={item.cartId}
-                    >
-
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                      />
-
-                      <div>
-
-                        <h3>
-                          {item.name}
-                        </h3>
-
-                        <p>
-                          {item.color} · {item.size}
-                        </p>
-
-                        <strong>
-                          $
-                          {(
-                            item.price *
-                            item.quantity
-                          ).toFixed(2)}
-                        </strong>
-
-                        <div className="quantity-control">
-
-                          <button
-                            type="button"
-                            onClick={() =>
-                              updateQuantity(
-                                item.cartId,
-                                -1
-                              )
-                            }
-                          >
-                            −
-                          </button>
-
-                          <span>
-                            {item.quantity}
-                          </span>
-
-                          <button
-                            type="button"
-                            onClick={() =>
-                              updateQuantity(
-                                item.cartId,
-                                1
-                              )
-                            }
-                          >
-                            +
-                          </button>
-
-                        </div>
-
-                        <button
-                          type="button"
-                          onClick={() =>
-                            removeFromCart(
-                              item.cartId
-                            )
-                          }
-                        >
-                          REMOVE
-                        </button>
-
-                      </div>
-
-                    </div>
-
-                  ))}
-
-                </div>
-
-                <div className="cart-footer">
-
-                  <div className="cart-total">
-
-                    <span>
-                      SUBTOTAL
-                    </span>
-
-                    <strong>
-                      ${total.toFixed(2)}
-                    </strong>
-
-                  </div>
-
-                  {total < 150 && (
-
-                    <p className="shipping-progress">
-
-                      $
-                      {(150 - total).toFixed(2)}
-                      {" "}
-                      away from FREE
-                      international shipping.
-
-                    </p>
-
-                  )}
-
-                  <button
-                    className="checkout-button"
-                    type="button"
-                    onClick={() =>
-                      alert(
-                        "Secure checkout will be connected in the next step."
-                      )
-                    }
-                  >
-                    CHECKOUT
-                  </button>
-
-                </div>
-
-              </>
-
-            )}
-
-          </aside>
-
-        </div>
-
-      )}
-
-    </div>
+    <button
+      type="button"
+      className={`ss-icon-btn ${className}`}
+      aria-label={label}
+      title={label}
+      onClick={onClick}
+    >
+      {children}
+    </button>
   );
 }
 
-/* =====================================================
-   ROOT
-   ===================================================== */
+function ProductCard({
+  product,
+  isWishlisted,
+  onToggleWishlist,
+  onOpenProduct,
+}) {
+  return (
+    <article className="ss-product-card">
+      <div
+        className="ss-product-image-wrap"
+        onClick={() => onOpenProduct(product)}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            onOpenProduct(product);
+          }
+        }}
+      >
+        <img
+          className="ss-product-image"
+          src={product.images[0]}
+          alt={product.name}
+          loading="lazy"
+        />
 
-createRoot(
-  document.getElementById("root")
-).render(
-  <App />
-);
-          </aside>
+        {product.badge && (
+          <span className="ss-product-badge">{product.badge}</span>
+        )}
 
+        <button
+          type="button"
+          className="ss-wish-small"
+          aria-label={
+            isWishlisted ? "Remove from wishlist" : "Add to wishlist"
+          }
+          onClick={(event) => {
+            event.stopPropagation();
+            onToggleWishlist(product.id);
+          }}
+        >
+          {isWishlisted ? "♥" : "♡"}
+        </button>
+      </div>
+
+      <div className="ss-product-info">
+        <div className="ss-product-category">
+          {product.category} · {product.type}
         </div>
 
-      )}
+        <h3 className="ss-product-name">{product.name}</h3>
 
-    </div>
+        <div className="ss-product-price">${product.price}</div>
+
+        <div className="ss-color-row" aria-label="Available colors">
+          {product.colors.map((color) => (
+            <span
+              key={color.name}
+              className="ss-color-dot"
+              title={color.name}
+              style={{ background: color.hex }}
+            />
+          ))}
+        </div>
+      </div>
+    </article>
   );
 }
 
-/* =====================================================
-   ROOT
-   ===================================================== */
+/* =========================================================
+   PRODUCT MODAL
+   ========================================================= */
 
-createRoot(
-  document.getElementById("root")
-).render(
-  <App />
-);
+function ProductModal({
+  product,
+  onClose,
+  onAddToCart,
+  isWishlisted,
+  onToggleWishlist,
+}) {
+  const [selectedSize, setSelectedSize] = useState(product.sizes[0]);
+  const [selectedColor, setSelectedColor] = useState(product.colors[0]);
+  const [imageIndex, setImageIndex] = useState(0);
+
+  useEffect(() => {
+    setSelectedSize(product.sizes[0]);
+    setSelectedColor(product.colors[0]);
+    setImageIndex(0);
+  }, [product]);
+
+  const handleAdd = () => {
+    onAddToCart(product, selectedSize, selectedColor.name);
+  };
+
+  return (
+    <div
+      className="ss-overlay"
+      role="presentation"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) {
+          onClose();
+        }
+      }}
+    >
+      <div className="ss-modal">
+        <button
+          type="button"
+          className="ss-modal-close"
+          aria-label="Close product"
+          onClick={onClose}
+        >
+         
